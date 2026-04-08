@@ -29,6 +29,8 @@ public class Rezervacija {
 	@JoinColumn(name = "id_sala")
 	private Sala sala;
 	
+	public Rezervacija() {}
+	
 	public Rezervacija(long id, int brojOsoba, int cenaKarte, Date datum, boolean placeno, Film film, Sala sala) {
 
 		this.id = id;
