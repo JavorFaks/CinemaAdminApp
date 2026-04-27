@@ -22,7 +22,7 @@ public class FilmController {
 		List<Film> filmovi = service.getAll();
 		
 		if(filmovi.isEmpty()){
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nema bioskopa");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nema filmova");
 		} else {
 			return ResponseEntity.ok(filmovi);
 		}
