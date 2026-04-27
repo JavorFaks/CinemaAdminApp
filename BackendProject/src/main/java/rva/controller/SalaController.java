@@ -18,7 +18,7 @@ public class SalaController {
 	private SalaServiceImpl service;
 	
 	@GetMapping("/sale")
-	public ResponseEntity<?> getPorudzbinas() {
+	public ResponseEntity<?> getSale() {
 		List<Sala> sale = service.getAll();
 		if(sale.isEmpty())
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No sale found");
