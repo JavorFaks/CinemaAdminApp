@@ -1,5 +1,6 @@
 package rva.implementation;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,10 +57,6 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 		
 	}
 
-	@Override
-	public List<Rezervacija> getRezervacijeByCena(double cena) {
-		return repo.findByCenaKarteLessThan(cena);
-	}
 
 	@Override
 	public List<Rezervacija> getRezervacijeByFilm(Film film) {
@@ -69,6 +66,30 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 	@Override
 	public List<Rezervacija> getRezervacijeBySala(Sala sala) {
 		return repo.findBySala(sala);
+	}
+	
+	@Override
+	public List<Rezervacija> getNeplaceneRezervacije()
+	{
+		return repo.findByPlacenoFalse();
+	}
+	
+	@Override
+	public List<Rezervacija> getRezervacijeZaDatum(Date datum)
+	{
+		return repo.findByDatum(datum);
+	}
+	
+	@Override
+	public List<Rezervacija> getIstorijaRezervacija(Date datum)
+	{
+		return repo.findByDatumBefore(datum);
+	}
+	
+	@Override
+	public List<Rezervacija> getPredstojeceRezervacije(Date datum)
+	{
+		return repo.findByDatumAfter(datum);
 	}
 
 }

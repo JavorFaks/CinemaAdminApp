@@ -19,7 +19,10 @@ public class Rezervacija {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rezervacija_seq")
 	private long id;
 	private int brojOsoba;
+	
+	//@Column(name = "cena_karte", columnDefinition = "NUMERIC(10, 2)")
 	private double cenaKarte;
+	
 	private Date datum;
 	private boolean placeno;
 	
@@ -33,7 +36,7 @@ public class Rezervacija {
 	
 	public Rezervacija() {}
 	
-	public Rezervacija(long id, int brojOsoba, int cenaKarte, Date datum, boolean placeno, Film film, Sala sala) {
+	public Rezervacija(long id, int brojOsoba, double cenaKarte, Date datum, boolean placeno, Film film, Sala sala) {
 
 		this.id = id;
 		this.brojOsoba = brojOsoba;
