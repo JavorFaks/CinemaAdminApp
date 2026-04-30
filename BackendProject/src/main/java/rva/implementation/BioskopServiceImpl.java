@@ -51,5 +51,11 @@ public class BioskopServiceImpl implements BioskopService {
 	public void delete(long id) {
 		repo.deleteById(id);
 	}
+	
+	@Override
+	public List<Bioskop> getBioskopPoGradu(String grad)
+	{
+		return repo.findByAdresaContainingIgnoreCase(grad);
+	}
 
 }
