@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import rva.model.Film;
@@ -52,7 +53,38 @@ public class FilmServiceImpl implements FilmService{
 	}
 
 	@Override
-	public List<Film> getFilmoviByNaziv(String naziv) {
-		return repo.findByNazivContainingIgnoreCase(naziv);
+	public List<Film> naprednaPretraga(String naziv, String zanr, Integer maxMinuta) {
+		
+		Specification<Film> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction(); //Prazno
+		
+		
+		//Filter po nazivu
+		if (naziv != null && !naziv.trim().isEmpty()) {
+			//dodaje se and uslov
+			//root tabela
+            spec = spec.and((root, query, criteriaBuilder) -> 
+                criteriaBuilder.like(criteriaBuilder.lower(root.get("naziv")), "%" + naziv.toLowerCase() + "%") //uporedi dva naziv iz tabele i uneseni
+            );
+        }
+		
+		//Dodaje se filter po zanru
+		if(zanr != null && !zanr.trim().isEmpty()) {
+			spec = spec.and((root, query, criteriaBuilder) ->
+				criteriaBuilder.equal(criteriaBuilder.lower(root.get("zanr")), zanr.toLowerCase())
+			);
+		}
+		
+		
+		//Dodaje se filter po trajanju
+		if(maxMinuta != null) {
+			spec = spec.and((root, query, criteriaBuilder) ->
+				criteriaBuilder.lessThanOrEqualTo(root.get("trajanje"), maxMinuta)
+			);
+		}
+		
+		return repo.findAll(spec);
+	
 	}
+	
+
 }

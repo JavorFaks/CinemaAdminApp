@@ -8,5 +8,7 @@ import rva.model.Film;
 
 @Service
 public interface FilmService extends CrudService<Film> {
-	List<Film> getFilmoviByNaziv(String naziv);
+	List<Film> naprednaPretraga(String naziv, String zanr, Integer maxMinuta);
+	
+	
 }
