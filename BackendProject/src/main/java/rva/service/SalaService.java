@@ -9,8 +9,7 @@ import rva.model.Sala;
 
 @Service
 public interface SalaService extends CrudService<Sala> {
-	List<Sala> getSaleByKapacitet(int kapacitet);
-	
 	List<Sala> getSaleByBioskop(Bioskop bioskop);
-
+	
+	List<Sala> naprednaPretraga(Integer kapacitet, Integer brojRedova, Long bioskopId);
 }

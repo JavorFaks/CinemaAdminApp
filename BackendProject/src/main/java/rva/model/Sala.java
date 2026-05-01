@@ -20,8 +20,8 @@ public class Sala {
 	@SequenceGenerator(name = "sala_seq", sequenceName = "sala_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sala_seq")
 	private long id;
-	private int kapacitet;
-	private int brojRedova;
+	private Integer kapacitet;
+	private Integer brojRedova;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_bioskop")
@@ -33,7 +33,7 @@ public class Sala {
 	
 	public Sala() {}
 	
-	public Sala(long id, int kapacitet, int brojRedova, Bioskop bioskop) {
+	public Sala(long id, Integer kapacitet, Integer brojRedova, Bioskop bioskop) {
 		
 		this.id = id;
 		this.kapacitet = kapacitet;
@@ -49,19 +49,19 @@ public class Sala {
 		this.id = id;
 	}
 
-	public int getKapacitet() {
+	public Integer getKapacitet() {
 		return kapacitet;
 	}
 
-	public void setKapacitet(int kapacitet) {
+	public void setKapacitet(Integer kapacitet) {
 		this.kapacitet = kapacitet;
 	}
 
-	public int getBrojRedova() {
+	public Integer getBrojRedova() {
 		return brojRedova;
 	}
 
-	public void setBrojRedova(int brojRedova) {
+	public void setBrojRedova(Integer brojRedova) {
 		this.brojRedova = brojRedova;
 	}
 

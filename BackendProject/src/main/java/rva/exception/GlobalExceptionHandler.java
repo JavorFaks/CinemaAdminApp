@@ -1,11 +1,15 @@
 package rva.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.validation.FieldError;
 
 @RestControllerAdvice
@@ -41,6 +45,19 @@ public class GlobalExceptionHandler {
 		
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(greske.toString());
+	}
+	
+	// Hvata EntityNotFoundException iz servisa
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<String> handleNotFound(EntityNotFoundException ex) {
+	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
+
+	// Hvata SQL gresku ako provera u servisu zakaze
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<String> handleSQLConstraints(DataIntegrityViolationException ex) {
+	    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	            .body("Greška: Narušen integritet podataka (verovatno nepostojeći ID bioskopa).");
 	}
 	
 	//Za sve ostale greske na serveru
