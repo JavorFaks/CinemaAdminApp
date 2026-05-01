@@ -2,6 +2,7 @@ package rva.model;
 
 import java.util.List;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -11,6 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 
 @Entity
 public class Film {
@@ -18,9 +23,17 @@ public class Film {
 	@SequenceGenerator(name = "film_seq", sequenceName = "film_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "film_seq")
 	private long id;
+	
+	@NotBlank(message = "Naziv filma je obavezan i ne sme biti prazan.")
 	private String naziv;
-	private int recenzija;
-	private int trajanje;
+	
+	private Integer recenzija;
+	
+	@NotNull(message = "Trajanje filma je obavezno.")
+    @Min(value = 1, message = "Trajanje filma mora biti veće od 0 minuta.")
+	private Integer trajanje;
+	
+	@NotBlank(message = "Zanr filma je obavezan.")
 	private String zanr;
 	
 	@OneToMany(mappedBy="film", cascade = CascadeType.ALL)
@@ -29,7 +42,7 @@ public class Film {
 	
 	public Film() {}
 	
-	public Film(long id, String naziv, int recenzija, String zanr) {
+	public Film(long id, String naziv, Integer recenzija, String zanr) {
 		this.id = id;
 		this.naziv = naziv;
 		this.recenzija = recenzija;
@@ -52,19 +65,19 @@ public class Film {
 		this.naziv = naziv;
 	}
 
-	public int getRecenzija() {
+	public Integer getRecenzija() {
 		return recenzija;
 	}
 
-	public void setRecenzija(int recenzija) {
+	public void setRecenzija(Integer recenzija) {
 		this.recenzija = recenzija;
 	}
 
-	public int getTrajanje() {
+	public Integer getTrajanje() {
 		return trajanje;
 	}
 
-	public void setTrajanje(int trajanje) {
+	public void setTrajanje(Integer trajanje) {
 		this.trajanje = trajanje;
 	}
 

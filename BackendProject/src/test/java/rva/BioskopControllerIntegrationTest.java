@@ -19,7 +19,7 @@ import rva.model.Bioskop;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class BioskopControllerINtegrationTest {
+class BioskopControllerIntegrationTest {
 
 	RestTemplate template = new RestTemplate();
 	String apiUrl = "http://localhost:8080/bioskop";

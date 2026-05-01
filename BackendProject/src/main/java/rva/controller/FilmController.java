@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import rva.implementation.FilmServiceImpl;
 import rva.model.Film;
 
@@ -27,26 +28,26 @@ public class FilmController {
 	@GetMapping("/film")
 	public ResponseEntity<?> getFilm(@RequestParam(required=false) Long id)
 	{
-		//Ako je unesen id trazi samo jedan film
-		if(id!=null)
-		{
-			Optional<Film> film = service.findById(id);
-			if(film.isEmpty())
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Film not found");
-			else
-				return ResponseEntity.ok(film.get());
-		}else {
-			//Ako nije unesen id onda trazi sve bioskope
-			List<Film> filmovi = service.getAll();
-			
-			if(filmovi.isEmpty()){
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nema filmova");
-			} else {
-				return ResponseEntity.ok(filmovi);
-			}
-		}
+		List<Film> filmovi = service.getAll();
+		
+		if(filmovi.isEmpty()){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nema filmova");
+		} 
+		
+		return ResponseEntity.ok(filmovi);
 	}
 	
+	// Vracanje samo jednog filma
+	@GetMapping("/film/{id}")
+	public ResponseEntity<?> getFilmById(@PathVariable Long id) {
+		Optional<Film> film = service.findById(id);
+		
+		if(film.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Film sa ID-jem " + id + " ne postoji.");
+		}
+			
+		return ResponseEntity.ok(film.get());
+	}
 	
 	@GetMapping("/film/pretraga")
 	public ResponseEntity<?> naprednaPretraga(
@@ -65,7 +66,7 @@ public class FilmController {
 	
 	//Dodavanje novog filma
 	@PostMapping("/film")
-	public ResponseEntity<?> createFilm(@RequestBody Film film){
+	public ResponseEntity<?> createFilm(@Valid @RequestBody Film film){
 		Film createdFilm = service.create(film);
 		
 		//Lokacija novo kreirane stavke
@@ -77,7 +78,7 @@ public class FilmController {
 	
 	//Modifikacija
 	@PutMapping("/film/{id}")
-	public ResponseEntity<?> updateFilm(@RequestBody Film film, @PathVariable Long id)
+	public ResponseEntity<?> updateFilm(@Valid @RequestBody Film film, @PathVariable Long id)
 	{
 		Optional<Film> updatedFilm = service.update(film, id);
 		
