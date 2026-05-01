@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import rva.implementation.BioskopServiceImpl;
 import rva.model.Bioskop;
 
@@ -26,28 +27,31 @@ public class BioskopController {
 	private BioskopServiceImpl service;
 	
 	@GetMapping("/bioskop")
-	public ResponseEntity<?> getBioskopi(@RequestParam(required=false) Long id)
+	public ResponseEntity<?> getBioskopi()
 	{
-		//Ako je unesen id trazi samo jedan bioskop
-		if(id!=null)
-		{
-			Optional<Bioskop> bioskop = service.findById(id);
-			if(bioskop.isEmpty())
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bioskop not found");
-			else
-				return ResponseEntity.ok(bioskop.get());
-		}else {
-			//Ako nije unesen id onda trazi sve bioskope
-			List<Bioskop> bioskopi = service.getAll();
+		//Ako nije unesen id onda trazi sve bioskope
+		List<Bioskop> bioskopi = service.getAll();
 			
-			if(bioskopi.isEmpty()){
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nema bioskopa");
-			} else {
-				return ResponseEntity.ok(bioskopi);
-			}
+		if(bioskopi.isEmpty()){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nema bioskopa");
+		} else {
+			return ResponseEntity.ok(bioskopi);
 		}
+	}
 		
 		
+	
+	
+	// Vracanje samo jednog bioskopa
+	@GetMapping("/bioskop/{id}")
+	public ResponseEntity<?> getFilmById(@PathVariable Long id) {
+		Optional<Bioskop> bioskop = service.findById(id);
+		
+		if(bioskop.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bioskop sa ID-jem " + id + " ne postoji.");
+		}
+			
+		return ResponseEntity.ok(bioskop.get());
 	}
 	
 	@GetMapping("/bioskop/grad")
@@ -64,7 +68,7 @@ public class BioskopController {
 	
 	
 	@PostMapping("/bioskop")
-	public ResponseEntity<?> createRezervacija(@RequestBody Bioskop bioskop){
+	public ResponseEntity<?> createBioskop(@Valid @RequestBody Bioskop bioskop){
 		Bioskop createdBioskop = service.create(bioskop);
 		
 		//Lokacija novo kreirane stavke
@@ -76,7 +80,7 @@ public class BioskopController {
 	
 	//Modifikacije vec postojece rezervacije
 	@PutMapping("/bioskop/{id}")
-	public ResponseEntity<?> updateRezervacija(@RequestBody Bioskop bioskop, @PathVariable Long id)
+	public ResponseEntity<?> updateBioskop(@Valid @RequestBody Bioskop bioskop, @PathVariable Long id)
 	{
 		Optional<Bioskop> updatedBioskop = service.update(bioskop, id);
 		
@@ -89,7 +93,7 @@ public class BioskopController {
 		
 	//Brisanje rezervacije
 	@DeleteMapping("/bioskop/{id}")
-	public ResponseEntity<?> deleteRezervacija(@PathVariable Long id)
+	public ResponseEntity<?> deleteBioskop(@PathVariable Long id)
 	{
 		if(service.existsById(id)) {
 			service.delete(id);

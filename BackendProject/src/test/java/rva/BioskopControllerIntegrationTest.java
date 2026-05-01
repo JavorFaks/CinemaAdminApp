@@ -12,7 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import rva.model.Bioskop;
@@ -39,7 +41,7 @@ class BioskopControllerIntegrationTest {
 	@Order(2)
 	void getBioskopById() {
 		long id = 1;
-		ResponseEntity<Bioskop> response = template.getForEntity(apiUrl + "?id=" + id, Bioskop.class);
+		ResponseEntity<Bioskop> response = template.getForEntity(apiUrl + "/" + id, Bioskop.class);
 		
 		assertEquals(200, response.getStatusCode().value());
 		assertEquals(id, response.getBody().getId());
@@ -93,7 +95,7 @@ class BioskopControllerIntegrationTest {
 	
 	@Test
 	@Order(5)
-	void updateRezervacija() {
+	void updateBioskop() {
 		largestId = 6;
 		Bioskop bioskop = new Bioskop();
 		bioskop.setAdresa("Beograd");
@@ -111,12 +113,71 @@ class BioskopControllerIntegrationTest {
 	
 	@Test
 	@Order(6)
-	void deleteRezervacija() {
+	void deleteBioskop() {
 		largestId = 6;
 		ResponseEntity<?> response = template.exchange(apiUrl + "/" + largestId, HttpMethod.DELETE, null, Object.class);
 		
 		assertEquals(204, response.getStatusCode().value());
 		assertNull(response.getBody());
 	}
+	
+	@Test
+    @Order(7)
+    void testCreateBioskop_InvalidInput_Returns400() {
+        // Pravimo neispravan objekat
+        Bioskop losBioskop = new Bioskop();
+        losBioskop.setNaziv(""); 
+        losBioskop.setAdresa("Beograd");
+
+        HttpEntity<Bioskop> entity = new HttpEntity<>(losBioskop);
+
+        try {
+            template.exchange(apiUrl, HttpMethod.POST, entity, String.class);
+            
+            fail("Trebalo je da baci 400 Bad Request zbog praznog naziva!");
+            
+        } catch (HttpClientErrorException e) {
+            
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
+           
+            assertTrue(e.getResponseBodyAsString().contains("obavezan"));
+        }
+    }
+
+    @Test
+    @Order(8)
+    void testUpdateBioskop_InvalidId_Returns404() {
+        Bioskop bioskop = new Bioskop();
+        bioskop.setNaziv("Izmena");
+        bioskop.setAdresa("Adresa");
+
+        HttpEntity<Bioskop> entity = new HttpEntity<>(bioskop);
+        long nepostojeciId = 9999;
+
+        try {
+            template.exchange(apiUrl + "/" + nepostojeciId, HttpMethod.PUT, entity, String.class);
+            
+            fail("Trebalo je da baci 404 Not Found!");
+            
+        } catch (HttpClientErrorException e) {
+            assertEquals(HttpStatus.NOT_FOUND, e.getStatusCode());
+            assertTrue(e.getResponseBodyAsString().contains("does not exist"));
+        }
+    }
+
+    @Test
+    @Order(9)
+    void testDeleteBioskop_InvalidId_Returns404() {
+        long nepostojeciId = 9999;
+
+        try {
+            template.exchange(apiUrl + "/" + nepostojeciId, HttpMethod.DELETE, null, String.class);
+            
+            fail("Trebalo je da baci 404 Not Found pri brisanju!");
+            
+        } catch (HttpClientErrorException e) {
+            assertEquals(HttpStatus.NOT_FOUND, e.getStatusCode());
+        }
+    }
 
 }

@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Bioskop {
@@ -18,7 +19,11 @@ public class Bioskop {
 	@SequenceGenerator(name = "bioskop_seq", sequenceName = "bioskop_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bioskop_seq")
 	private long id;
+	
+	@NotBlank(message = "Naziv bioskopa je obavezan i ne sme biti prazan.")
 	private String naziv;
+	
+	@NotBlank(message = "Adresa je obavezna")
 	private String adresa;
 	
 	@OneToMany(mappedBy="bioskop", cascade = CascadeType.ALL)

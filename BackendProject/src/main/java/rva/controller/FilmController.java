@@ -26,7 +26,7 @@ public class FilmController {
 	private FilmServiceImpl service;
 	
 	@GetMapping("/film")
-	public ResponseEntity<?> getFilm(@RequestParam(required=false) Long id)
+	public ResponseEntity<?> getFilm()
 	{
 		List<Film> filmovi = service.getAll();
 		
