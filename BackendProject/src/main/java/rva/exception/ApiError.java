@@ -18,8 +18,8 @@ public class ApiError {
     
     private List<String> details; // Ovde idu greške iz validacije
 
-	public ApiError(LocalDateTime timestamp, int status, String error, String message, String path) {
-		this.timestamp = timestamp;
+	public ApiError(int status, String error, String message, String path) {
+		this.timestamp = LocalDateTime.now();
 		this.status = status;
 		this.error = error;
 		this.message = message;
