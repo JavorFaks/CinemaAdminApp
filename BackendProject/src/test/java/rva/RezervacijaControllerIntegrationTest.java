@@ -17,9 +17,12 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import rva.model.Film;
 import rva.model.Rezervacija;
+import rva.model.Sala;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -43,7 +46,7 @@ class RezervacijaControllerIntegrationTest {
 	@Order(2)
 	void getRezervacijaById() {
 		long id = 1;
-		ResponseEntity<Rezervacija> response = template.getForEntity(apiUrl + "?id=" + id, Rezervacija.class);
+		ResponseEntity<Rezervacija> response = template.getForEntity(apiUrl + "/" + id, Rezervacija.class);
 		
 		assertEquals(200, response.getStatusCode().value());
 		assertEquals(id, response.getBody().getId());
@@ -89,41 +92,76 @@ class RezervacijaControllerIntegrationTest {
 	
 	@Test
 	@Order(6)
-	void createRezervacija() {
-		Rezervacija rezervacija = new Rezervacija();
-		rezervacija.setCenaKarte(400.22);
-		rezervacija.setBrojOsoba(4);;
-		
-		HttpEntity<Rezervacija> entity = new HttpEntity<Rezervacija>(rezervacija);
-		
-		ResponseEntity<Rezervacija> response = template.exchange(apiUrl, HttpMethod.POST, entity, Rezervacija.class);
-		
-		assertEquals(201, response.getStatusCode().value());
-		assertEquals(rezervacija.getCenaKarte(), response.getBody().getCenaKarte());
-		assertEquals(rezervacija.getBrojOsoba(), response.getBody().getBrojOsoba());
-		
+	void createRezervacija_ValidInput() {
+	    Rezervacija rezervacija = new Rezervacija();
+	    rezervacija.setCenaKarte(400.22);
+	    rezervacija.setBrojOsoba(4);
+	    
+	    // Moramo postaviti i relacije da baza ne bi bacila 500 grešku
+	    Film film = new Film();
+	    film.setId(1); 
+	    rezervacija.setFilm(film);
+	    
+	    Sala sala = new Sala();
+	    sala.setId(1); 
+	    rezervacija.setSala(sala);
+
+	    HttpEntity<Rezervacija> entity = new HttpEntity<>(rezervacija);
+	    
+	    ResponseEntity<Rezervacija> response = template.exchange(apiUrl, HttpMethod.POST, entity, Rezervacija.class);
+	    
+	    assertEquals(201, response.getStatusCode().value());
+	    assertNotNull(response.getBody());
+	    assertEquals(400.22, response.getBody().getCenaKarte());
+	    assertEquals(4, response.getBody().getBrojOsoba());
 	}
 	
 	@Test
 	@Order(7)
-	void updateRezervacija() {
-		largestId = 19;
-		Rezervacija rezervacija = new Rezervacija();
-		rezervacija.setCenaKarte(500.00);
-		rezervacija.setBrojOsoba(5);;
-		
-		HttpEntity<Rezervacija> entity = new HttpEntity<Rezervacija>(rezervacija);
-		
-		ResponseEntity<Rezervacija> response = template.exchange(apiUrl+"/"+largestId, 
-				HttpMethod.PUT, entity, Rezervacija.class);
-		
-		assertEquals(200, response.getStatusCode().value());
-		assertEquals(rezervacija.getCenaKarte(), response.getBody().getCenaKarte());
-		assertEquals(rezervacija.getBrojOsoba(), response.getBody().getBrojOsoba());
+	void createRezervacija_InvalidInput() {
+	    Rezervacija neispravnaRezervacija = new Rezervacija();
+	    neispravnaRezervacija.setCenaKarte(-500.0);
+	    
+	    HttpEntity<Rezervacija> entity = new HttpEntity<>(neispravnaRezervacija);
+	    
+	    try {
+	     
+	        template.exchange(apiUrl, HttpMethod.POST, entity, Rezervacija.class);
+	        
+	        fail("Ocekivano je 400 bad request.");
+	        
+	    } catch (HttpClientErrorException e) {
+	        assertEquals(400, e.getStatusCode().value());
+	    }
 	}
 	
 	@Test
 	@Order(8)
+	void updateRezervacija() {
+	    ResponseEntity<Rezervacija> getResponse = template.getForEntity(apiUrl + "/1", Rezervacija.class);
+	    Rezervacija postojecaRezervacija = getResponse.getBody();
+	    
+	    assertNotNull(postojecaRezervacija);
+
+	    postojecaRezervacija.setCenaKarte(500.00);
+	    postojecaRezervacija.setBrojOsoba(5);
+	    
+	    HttpEntity<Rezervacija> entity = new HttpEntity<>(postojecaRezervacija);
+	    
+	  
+	    ResponseEntity<Rezervacija> response = template.exchange(
+	            apiUrl + "/" + postojecaRezervacija.getId(), 
+	            HttpMethod.PUT, 
+	            entity, 
+	            Rezervacija.class);
+	    
+	    assertEquals(200, response.getStatusCode().value());
+	    assertEquals(500.00, response.getBody().getCenaKarte());
+	    assertEquals(5, response.getBody().getBrojOsoba());
+	}
+	
+	@Test
+	@Order(9)
 	void deleteRezervacija() {
 		largestId = 19;
 		ResponseEntity<?> response = template.exchange(apiUrl + "/" + largestId, HttpMethod.DELETE, null, Object.class);
@@ -133,7 +171,7 @@ class RezervacijaControllerIntegrationTest {
 	}
 	
 	@Test
-	@Order(9)
+	@Order(10)
 	void getNeplaceneRezervacije()
 	{
 		ResponseEntity<List<Rezervacija>> response = template.exchange(apiUrl + "/neplacene", 
@@ -148,7 +186,7 @@ class RezervacijaControllerIntegrationTest {
 	}
 	
 	@Test
-	@Order(10)
+	@Order(11)
 	void getRezervacijeZaDatum() {
 	    String testDatum = "2024-03-26"; 
 	    
@@ -168,13 +206,13 @@ class RezervacijaControllerIntegrationTest {
 	            assertEquals(testDatum, datumIzBaze);
 	        }
 	        
-	    } catch (org.springframework.web.client.HttpClientErrorException e) {
+	    } catch (HttpClientErrorException e) {
 	        assertEquals(404, e.getStatusCode().value());
 	    }
 	}
 	
 	@Test
-	@Order(11)
+	@Order(12)
 	void getPredstojece() {
 	    String testDatum = "2024-03-26"; 
 	    Date targetDate = null;
@@ -200,13 +238,13 @@ class RezervacijaControllerIntegrationTest {
 	            assertTrue(r.getDatum().after(targetDate));
 	        }
 	        
-	    } catch (org.springframework.web.client.HttpClientErrorException e) {
+	    } catch (HttpClientErrorException e) {
 	        assertEquals(404, e.getStatusCode().value());
 	    }
 	}
 	
 	@Test
-	@Order(12)
+	@Order(13)
 	void getIstoriju() {
 	    String testDatum = "2024-03-29"; 
 	    Date targetDate = null;
@@ -232,7 +270,7 @@ class RezervacijaControllerIntegrationTest {
 	            assertTrue(r.getDatum().before(targetDate));
 	        }
 	        
-	    } catch (org.springframework.web.client.HttpClientErrorException e) {
+	    } catch (HttpClientErrorException e) {
 	        assertEquals(404, e.getStatusCode().value());
 	    }
 	}

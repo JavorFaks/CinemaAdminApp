@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Rezervacija {
@@ -18,25 +19,27 @@ public class Rezervacija {
 	@SequenceGenerator(name = "rezervacija_seq", sequenceName = "rezervacija_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rezervacija_seq")
 	private long id;
-	private int brojOsoba;
+	private Integer brojOsoba;
 	
-	//@Column(name = "cena_karte", columnDefinition = "NUMERIC(10, 2)")
-	private double cenaKarte;
+	
+	private Double cenaKarte;
 	
 	private Date datum;
 	private boolean placeno;
 	
+	@NotNull(message="Film je obavezan")
 	@ManyToOne
 	@JoinColumn(name = "id_film")
 	private Film film;
 
+	@NotNull(message="Sala je obavezna")
 	@ManyToOne
 	@JoinColumn(name = "id_sala")
 	private Sala sala;
 	
 	public Rezervacija() {}
 	
-	public Rezervacija(long id, int brojOsoba, double cenaKarte, Date datum, boolean placeno, Film film, Sala sala) {
+	public Rezervacija(long id, Integer brojOsoba, Double cenaKarte, Date datum, boolean placeno, Film film, Sala sala) {
 
 		this.id = id;
 		this.brojOsoba = brojOsoba;
@@ -55,19 +58,19 @@ public class Rezervacija {
 		this.id = id;
 	}
 
-	public int getBrojOsoba() {
+	public Integer getBrojOsoba() {
 		return brojOsoba;
 	}
 
-	public void setBrojOsoba(int brojOsoba) {
+	public void setBrojOsoba(Integer brojOsoba) {
 		this.brojOsoba = brojOsoba;
 	}
 
-	public double getCenaKarte() {
+	public Double getCenaKarte() {
 		return cenaKarte;
 	}
 
-	public void setCenaKarte(double cenaKarte) {
+	public void setCenaKarte(Double cenaKarte) {
 		this.cenaKarte = cenaKarte;
 	}
 
@@ -99,7 +102,7 @@ public class Rezervacija {
 		return sala;
 	}
 
-	public void setIdSala(Sala sala) {
+	public void setSala(Sala sala) {
 		this.sala = sala;
 	}
 }

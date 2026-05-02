@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityNotFoundException;
-import rva.model.Bioskop;
 import rva.model.Sala;
 import rva.repository.SalaRepository;
 import rva.service.BioskopService;
@@ -26,7 +25,13 @@ public class SalaServiceImpl implements SalaService {
 	
 	@Override
 	public List<Sala> getAll() {
-		return repo.findAll();
+		List<Sala> sale = repo.findAll();
+		
+		if(sale.isEmpty()) {
+			throw new EntityNotFoundException("Trenutno nema nijedne sale.");
+		}
+		
+		return sale;
 	}
 
 	@Override
@@ -35,8 +40,14 @@ public class SalaServiceImpl implements SalaService {
 	}
 
 	@Override
-	public Optional<Sala> findById(long id) {
-		return repo.findById(id);
+	public Sala findById(long id) {
+		Optional<Sala> sala = repo.findById(id);
+		
+		if(sala.isEmpty()) {
+			throw new EntityNotFoundException("Sala sa ID-jem " + id + " ne postoji.");
+		}
+		
+		return sala.get();
 	}
 
 	@Override
@@ -55,23 +66,46 @@ public class SalaServiceImpl implements SalaService {
 	}
 
 	@Override
-	public Optional<Sala> update(Sala body, long id) {
+	public Sala update(Sala body, long id) {
 		if(repo.existsById(id)) {
 			body.setId(id);
-			return Optional.of(repo.save(body));
-		} 
-		return Optional.empty();
-	}
-
-	@Override
-	public void delete(long id) {
-		repo.deleteById(id);
+			if(!bService.existsById(body.getBioskop().getId())) {
+				throw new EntityNotFoundException("Bioskop sa ID-jem " + id + " ne postoji.");
+			}
+			return repo.save(body);
+		} else {
+			throw new EntityNotFoundException("Sala sa ID-jem " + id + " ne postoji.");
+		}
+		
+		
 		
 	}
 
 	@Override
-	public List<Sala> getSaleByBioskop(Bioskop bioskop) {
-		return repo.findByBioskop(bioskop);
+	public void delete(long id) {
+		if(existsById(id)){
+			repo.deleteById(id);
+		} else {
+			throw new EntityNotFoundException("Sala sa ID-jem " + id + " ne postoji.");
+		}
+		
+		
+	}
+
+	@Override
+	public List<Sala> getSaleByBioskop(Long bioskopId) {
+		if(!bService.existsById(bioskopId)) {
+			throw new EntityNotFoundException("Bioskop sa ID-jem " + bioskopId + " ne postoji.");
+		} else {
+			List<Sala> sale = repo.findByBioskop_Id(bioskopId);
+			if(sale.isEmpty()) {
+				throw new EntityNotFoundException("Trenutno ne postoje sale u bioskopu sa ID-jem " + bioskopId);
+			} else {
+				return sale;
+			}
+		}
+		
+		
 	}
 	
 	@Override 
@@ -94,10 +128,20 @@ public class SalaServiceImpl implements SalaService {
 		}
 		
 		if (bioskopId != null) {
+			if(!bService.existsById(bioskopId)) {
+				throw new EntityNotFoundException("Bioskop sa ID-jem " + bioskopId + " ne postoji.");
+			}
+			
 	        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("bioskop").get("id"), bioskopId));
 	    }
 		
-		return repo.findAll(spec);
+		List<Sala> sale = repo.findAll(spec);
+		
+		if(sale.isEmpty()) {
+			throw new EntityNotFoundException("Trenutno nema sala sa ovim kriterijumima");
+		}
+		
+		return sale;
 	}
 
 }

@@ -2,10 +2,8 @@ package rva.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,40 +24,26 @@ public class FilmController {
 	private FilmServiceImpl service;
 	
 	@GetMapping("/film")
-	public ResponseEntity<?> getFilm()
+	public ResponseEntity<List<Film>> getFilm()
 	{
 		List<Film> filmovi = service.getAll();
-		
-		if(filmovi.isEmpty()){
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nema filmova");
-		} 
-		
 		return ResponseEntity.ok(filmovi);
 	}
 	
 	// Vracanje samo jednog filma
 	@GetMapping("/film/{id}")
-	public ResponseEntity<?> getFilmById(@PathVariable Long id) {
-		Optional<Film> film = service.findById(id);
-		
-		if(film.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Film sa ID-jem " + id + " ne postoji.");
-		}
-			
-		return ResponseEntity.ok(film.get());
+	public ResponseEntity<Film> getFilmById(@PathVariable Long id) {
+		Film film = service.findById(id);
+		return ResponseEntity.ok(film);
 	}
 	
 	@GetMapping("/film/pretraga")
-	public ResponseEntity<?> naprednaPretraga(
+	public ResponseEntity<List<Film>> naprednaPretraga(
 	        @RequestParam(required = false) String naziv,
 	        @RequestParam(required = false) String zanr,
 	        @RequestParam(required = false) Integer maxMinuta
 	) {
 	    List<Film> filmovi = service.naprednaPretraga(naziv, zanr, maxMinuta);
-	    
-	    if(filmovi.isEmpty()) {
-	        return ResponseEntity.status(404).body("Nema filmova sa ovim kriterijumima!");
-	    }
 	    
 	    return ResponseEntity.ok(filmovi);
 	}
@@ -78,26 +62,19 @@ public class FilmController {
 	
 	//Modifikacija
 	@PutMapping("/film/{id}")
-	public ResponseEntity<?> updateFilm(@Valid @RequestBody Film film, @PathVariable Long id)
+	public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film, @PathVariable Long id)
 	{
-		Optional<Film> updatedFilm = service.update(film, id);
+		Film updatedFilm = service.update(film, id);
 		
-		if(updatedFilm.isEmpty())
-			return ResponseEntity.status(404).body(String.format("Film with ID %s does not exist", id));
-			
-		return ResponseEntity.ok(updatedFilm.get());
+		return ResponseEntity.ok(updatedFilm);
 	}
 		
 		
 	//Brisanje filma
 	@DeleteMapping("/film/{id}")
-	public ResponseEntity<?> deleteFilm(@PathVariable Long id)
+	public ResponseEntity<Void> deleteFilm(@PathVariable Long id)
 	{
-		if(service.existsById(id)) {
-			service.delete(id);
-			return ResponseEntity.status(204).body(null);
-		}
-			
-		return ResponseEntity.status(404).body(String.format("Film with ID %s does not exist", id));
+		service.delete(id);
+		return ResponseEntity.status(204).body(null);
 	}
 }

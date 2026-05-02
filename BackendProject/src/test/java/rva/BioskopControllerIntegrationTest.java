@@ -161,7 +161,7 @@ class BioskopControllerIntegrationTest {
             
         } catch (HttpClientErrorException e) {
             assertEquals(HttpStatus.NOT_FOUND, e.getStatusCode());
-            assertTrue(e.getResponseBodyAsString().contains("does not exist"));
+            assertTrue(e.getResponseBodyAsString().contains("ne postoji"));
         }
     }
 

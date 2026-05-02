@@ -5,19 +5,17 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import rva.model.Film;
 import rva.model.Rezervacija;
-import rva.model.Sala;
 
 
 @Service
 public interface RezervacijaService extends CrudService<Rezervacija> {
 	
 	//Rezervacije za odredjeni film
-	List<Rezervacija> getRezervacijeByFilm(Film film);
+	List<Rezervacija> getRezervacijeByFilm(Long filmId);
 
 	//Rezervacije za datu salu
-	List<Rezervacija> getRezervacijeBySala(Sala sala);
+	List<Rezervacija> getRezervacijeBySala(Long salaId);
 	
 	
 	//Rezervacije za odredjeni datum

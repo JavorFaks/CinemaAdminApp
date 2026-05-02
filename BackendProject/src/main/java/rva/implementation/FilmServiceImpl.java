@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import jakarta.persistence.EntityNotFoundException;
 import rva.model.Film;
 import rva.repository.FilmRepository;
 import rva.service.FilmService;
@@ -19,7 +20,11 @@ public class FilmServiceImpl implements FilmService{
 	
 	@Override
 	public List<Film> getAll() {
-		return repo.findAll();
+		List<Film> filmovi = repo.findAll();
+		if(filmovi.isEmpty()) {
+			throw new EntityNotFoundException("Trenutno nema nijednog filma.");
+		}
+		return filmovi;
 	}
 
 	@Override
@@ -28,8 +33,14 @@ public class FilmServiceImpl implements FilmService{
 	}
 
 	@Override
-	public Optional<Film> findById(long id) {
-		return repo.findById(id);
+	public Film findById(long id) {
+		Optional<Film> film = repo.findById(id);
+		
+		if(film.isEmpty()) {
+			throw new EntityNotFoundException("Film sa ID-jem: " + id + " ne postoji.");
+		}
+		
+		return film.get();
 	}
 
 	@Override
@@ -38,18 +49,25 @@ public class FilmServiceImpl implements FilmService{
 	}
 
 	@Override
-	public Optional<Film> update(Film body, long id) {
+	public Film update(Film body, long id) {
+		
 		if(existsById(id)) {
 			body.setId(id);
-			return Optional.of(repo.save(body));
+			return repo.save(body);
+		} else {
+			throw new EntityNotFoundException("Film sa ID-jem: " + id + " ne postoji."); 
 		} 
-		return Optional.empty();
+		
 	}
 
 	@Override
 	public void delete(long id) {
-		repo.deleteById(id);
-
+		if(existsById(id)) {
+			repo.deleteById(id);
+		} else {
+			throw new EntityNotFoundException("Film sa ID-jem: " + id + " ne postoji."); 
+		}
+	
 	}
 
 	@Override
@@ -82,7 +100,14 @@ public class FilmServiceImpl implements FilmService{
 			);
 		}
 		
-		return repo.findAll(spec);
+		List<Film> filmovi = repo.findAll(spec);
+		
+		
+		if(filmovi.isEmpty()) {
+			throw new EntityNotFoundException("Nema filmova koji ispunjavaju ove kriterijume.");
+		}
+		
+		return filmovi;
 	
 	}
 	

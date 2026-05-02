@@ -108,7 +108,7 @@ class FilmControllerIntegrationTest {
             // Ocekivano ponasanje, greska 404
             
     		assertEquals(HttpStatus.NOT_FOUND, e.getStatusCode());
-            assertTrue(e.getResponseBodyAsString().contains("Nema filmova sa ovim kriterijumima!"));
+            assertTrue(e.getResponseBodyAsString().contains("Nema filmova koji ispunjavaju ove kriterijume"));
         }
    }
         
@@ -194,7 +194,7 @@ class FilmControllerIntegrationTest {
            fail("Test pao: ocekivano je 404 a ne 200");
        }catch(HttpClientErrorException e) {
     	   assertEquals(HttpStatus.NOT_FOUND, e.getStatusCode());
-           assertTrue(e.getResponseBodyAsString().contains("does not exist"));
+           assertTrue(e.getResponseBodyAsString().contains("ne postoji"));
        }
        
 

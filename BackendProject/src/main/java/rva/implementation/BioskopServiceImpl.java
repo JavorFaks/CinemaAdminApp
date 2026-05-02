@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import jakarta.persistence.EntityNotFoundException;
 import rva.model.Bioskop;
 import rva.repository.BioskopRepository;
 import rva.service.BioskopService;
@@ -19,7 +20,12 @@ public class BioskopServiceImpl implements BioskopService {
 	
 	@Override
 	public List<Bioskop> getAll() {
-		return repo.findAll();
+		List<Bioskop> bioskopi = repo.findAll();
+		
+		if(bioskopi.isEmpty()) {
+			throw new EntityNotFoundException("Trenutno nema nijednog bioskopa.");
+		}
+		return bioskopi;
 	}
 
 	@Override
@@ -28,8 +34,13 @@ public class BioskopServiceImpl implements BioskopService {
 	}
 
 	@Override
-	public Optional<Bioskop> findById(long id) {
-		return repo.findById(id);
+	public Bioskop findById(long id) {
+		Optional<Bioskop> bioskop = repo.findById(id);
+		
+		if(bioskop.isEmpty()) {
+			throw new EntityNotFoundException("Bioskop sa ID-jem " + id + " ne postoji.");
+		}
+		return bioskop.get();
 	}
 
 	@Override
@@ -38,24 +49,35 @@ public class BioskopServiceImpl implements BioskopService {
 	}
 
 	@Override
-	public Optional<Bioskop> update(Bioskop body, long id) {
+	public Bioskop update(Bioskop body, long id) {
 		if(existsById(id)) {
 			body.setId(id);
-			return Optional.of(repo.save(body));
+			return repo.save(body);
+		} else{
+			throw new EntityNotFoundException("Bioskop sa ID-jem " + id + " ne postoji.");
 		}
-		
-		return Optional.empty();
 	}
 
 	@Override
 	public void delete(long id) {
-		repo.deleteById(id);
+		if(existsById(id)) {
+			repo.deleteById(id);
+		} else {
+			throw new EntityNotFoundException("Bioskop sa ID-jem " + id + " ne postoji.");
+		}
+		
 	}
 	
 	@Override
 	public List<Bioskop> getBioskopPoGradu(String grad)
 	{
-		return repo.findByAdresaContainingIgnoreCase(grad);
+		List<Bioskop> bioskopi = repo.findByAdresaContainingIgnoreCase(grad);
+		
+		if(bioskopi.isEmpty()) {
+			throw new EntityNotFoundException("Bioskop iz ovog grada ne postoje.");
+		}
+		
+		return bioskopi;
 	}
 
 }
