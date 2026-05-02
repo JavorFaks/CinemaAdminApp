@@ -1,7 +1,7 @@
 package rva.controller;
 
 import java.net.URI;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -60,41 +60,16 @@ public class RezervacijaController {
 		
 	}
 	
-	
-	@GetMapping("/rezervacija/neplacene")
-	public ResponseEntity<List<Rezervacija>> getNeplaceneRezervacije()
+	@GetMapping("/rezervacija/pretraga")
+	public ResponseEntity<List<Rezervacija>> naprednaPretraga(@RequestParam(required = false) Long filmId,
+	        @RequestParam(required = false) Long salaId,
+	        @RequestParam(required = false) Boolean placeno, 
+	        @RequestParam(required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate datumOd,
+	        @RequestParam(required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate datumDo)
 	{
-		List<Rezervacija> rezervacije = service.getNeplaceneRezervacije();
-		
+		List<Rezervacija> rezervacije = service.naprednaPretraga(filmId, salaId, placeno, datumOd, datumDo);
 		return ResponseEntity.ok(rezervacije);
-	}
-	
-	@GetMapping("/rezervacija/datum")
-	public ResponseEntity<List<Rezervacija>> getRezervacijeZaDatum(@RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date datum)
-	{
-		List<Rezervacija> rezervacije = service.getRezervacijeZaDatum(datum);
-		
-		return ResponseEntity.ok(rezervacije);
-	}
-	
-	
-	@GetMapping("/rezervacija/predstojece")
-	public ResponseEntity<List<Rezervacija>> getPredstojeceRezervacije(
-	        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date datum) {
-	    
-	    List<Rezervacija> rezervacije = service.getPredstojeceRezervacije(datum);
-	   
-	    return ResponseEntity.ok(rezervacije);
-	}
-	
-	@GetMapping("/rezervacija/istorija")
-	public ResponseEntity<List<Rezervacija>> getIstorijaRezervacije(
-	        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date datum) {
-	    
-	    List<Rezervacija> rezervacije = service.getIstorijaRezervacija(datum);
-	    
-	    return ResponseEntity.ok(rezervacije);
-	}
+	}	
 	
 	//Dodavanje rezervacije
 	@PostMapping("/rezervacija")

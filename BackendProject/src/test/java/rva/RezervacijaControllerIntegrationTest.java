@@ -2,12 +2,8 @@ package rva;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -172,105 +168,60 @@ class RezervacijaControllerIntegrationTest {
 	
 	@Test
 	@Order(10)
-	void getNeplaceneRezervacije()
-	{
-		ResponseEntity<List<Rezervacija>> response = template.exchange(apiUrl + "/neplacene", 
-				HttpMethod.GET, null, 
-				new ParameterizedTypeReference<List<Rezervacija>>() {});
-		
-		assertEquals(200, response.getStatusCode().value());
-		
-		for(Rezervacija r : response.getBody()) {
-			assertFalse(r.isPlaceno()); 
-		}
+	void pretragaRezervacija_SamoPoFilmu() {
+	    long filmId = 1;
+	    
+	    String url = apiUrl + "/pretraga?filmId=" + filmId;
+	    
+	    ResponseEntity<List<Rezervacija>> response = template.exchange(url, 
+	            HttpMethod.GET, null, 
+	            new ParameterizedTypeReference<List<Rezervacija>>() {});
+	    
+	    assertEquals(200, response.getStatusCode().value());
+	    assertNotNull(response.getBody());
+	    
+	    for(Rezervacija r : response.getBody()) {
+	        assertEquals(filmId, r.getFilm().getId());
+	    }
 	}
 	
 	@Test
 	@Order(11)
-	void getRezervacijeZaDatum() {
-	    String testDatum = "2024-03-26"; 
+	void pretragaRezervacija_KombinovanoFilmISalaIDatum() {
+	    long filmId = 1;
+	    long salaId = 1;
+	    String datumOd = "2023-01-01"; 
 	    
-	    try {
-	        ResponseEntity<List<Rezervacija>> response = template.exchange(apiUrl + "/datum?datum=" + testDatum, 
-	                HttpMethod.GET, null, 
-	                new ParameterizedTypeReference<List<Rezervacija>>() {});
-	        
-	        assertEquals(200, response.getStatusCode().value());
-	        assertNotEquals(0, response.getBody().size());
-	        
-	       
-	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	        for (Rezervacija r : response.getBody()) {
-	            // Proveravamo da li je datum svake vraćene rezervacije zaista taj koji smo tražili
-	            String datumIzBaze = sdf.format(r.getDatum());
-	            assertEquals(testDatum, datumIzBaze);
-	        }
-	        
-	    } catch (HttpClientErrorException e) {
-	        assertEquals(404, e.getStatusCode().value());
+
+	    String url = apiUrl + "/pretraga?filmId=" + filmId + "&salaId=" + salaId + "&datumOd=" + datumOd;
+	    
+	    ResponseEntity<List<Rezervacija>> response = template.exchange(url, 
+	            HttpMethod.GET, null, 
+	            new ParameterizedTypeReference<List<Rezervacija>>() {});
+	    
+	    assertEquals(200, response.getStatusCode().value());
+	    assertNotNull(response.getBody());
+	    
+	    // Proveravamo da li su rezultati strogo filtrirani i po filmu i po sali
+	    for(Rezervacija r : response.getBody()) {
+	        assertEquals(filmId, r.getFilm().getId());
+	        assertEquals(salaId, r.getSala().getId());
 	    }
 	}
-	
+
 	@Test
 	@Order(12)
-	void getPredstojece() {
-	    String testDatum = "2024-03-26"; 
-	    Date targetDate = null;
+	void pretragaRezervacija_NepostojeciFilmBacaGresku() {
+	    long nepostojeciFilmId = 999;
+	    String url = apiUrl + "/pretraga?filmId=" + nepostojeciFilmId;
 	    
 	    try {
-	        targetDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDatum);
-	    } catch (ParseException e) {
-	        Assertions.fail("Greška: Test datum nije u dobrom formatu!");
-	        return;
-	    }
-	    
-	    try {
-	        ResponseEntity<List<Rezervacija>> response = template.exchange(apiUrl + "/predstojece?datum=" + testDatum, 
-	                HttpMethod.GET, null, 
-	                new ParameterizedTypeReference<List<Rezervacija>>() {});
+	        template.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Rezervacija>>() {});
 	        
-	        assertEquals(200, response.getStatusCode().value());
-	        assertNotEquals(0, response.getBody().size());
-	        
-	       
-	        
-	        for (Rezervacija r : response.getBody()) {
-	            assertTrue(r.getDatum().after(targetDate));
-	        }
+	        fail("Ocekivano je 404 Not Found, jer film ne postoji.");
 	        
 	    } catch (HttpClientErrorException e) {
-	        assertEquals(404, e.getStatusCode().value());
-	    }
-	}
-	
-	@Test
-	@Order(13)
-	void getIstoriju() {
-	    String testDatum = "2024-03-29"; 
-	    Date targetDate = null;
-	    
-	    try {
-	        targetDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDatum);
-	    } catch (ParseException e) {
-	        Assertions.fail("Greška: Test datum nije u dobrom formatu!");
-	        return;
-	    }
-	    
-	    try {
-	        ResponseEntity<List<Rezervacija>> response = template.exchange(apiUrl + "/istorija?datum=" + testDatum, 
-	                HttpMethod.GET, null, 
-	                new ParameterizedTypeReference<List<Rezervacija>>() {});
 	        
-	        assertEquals(200, response.getStatusCode().value());
-	        assertNotEquals(0, response.getBody().size());
-	        
-	       
-	        
-	        for (Rezervacija r : response.getBody()) {
-	            assertTrue(r.getDatum().before(targetDate));
-	        }
-	        
-	    } catch (HttpClientErrorException e) {
 	        assertEquals(404, e.getStatusCode().value());
 	    }
 	}

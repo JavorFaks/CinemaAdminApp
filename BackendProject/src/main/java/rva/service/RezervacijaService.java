@@ -1,6 +1,6 @@
 package rva.service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -18,13 +18,6 @@ public interface RezervacijaService extends CrudService<Rezervacija> {
 	List<Rezervacija> getRezervacijeBySala(Long salaId);
 	
 	
-	//Rezervacije za odredjeni datum
-	List<Rezervacija> getRezervacijeZaDatum(Date datum);
-		
-	//Za istoriju rezervacija ili za predstojece rezervacije
-	List<Rezervacija> getIstorijaRezervacija(Date datum);
-	List<Rezervacija> getPredstojeceRezervacije(Date datum);
-	
-	
-	List<Rezervacija> getNeplaceneRezervacije();
+	//Napredna pretraga
+	List<Rezervacija> naprednaPretraga(Long filmId, Long salaId, Boolean placeno, LocalDate datumOd, LocalDate datumDo);
 }

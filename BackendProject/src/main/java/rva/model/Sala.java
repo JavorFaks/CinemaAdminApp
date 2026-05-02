@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Sala {
@@ -23,6 +24,7 @@ public class Sala {
 	private Integer kapacitet;
 	private Integer brojRedova;
 	
+	@NotNull(message = "Bioskop je obavezan")
 	@ManyToOne
 	@JoinColumn(name = "id_bioskop")
 	private Bioskop bioskop;

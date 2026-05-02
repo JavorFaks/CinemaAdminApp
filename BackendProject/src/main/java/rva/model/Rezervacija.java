@@ -2,7 +2,7 @@ package rva.model;
 
 
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,11 +21,10 @@ public class Rezervacija {
 	private long id;
 	private Integer brojOsoba;
 	
-	
 	private Double cenaKarte;
 	
-	private Date datum;
-	private boolean placeno;
+	private LocalDate datum; //LocalDate da se ne zamaramo vremenskim zonama
+	private Boolean placeno;
 	
 	@NotNull(message="Film je obavezan")
 	@ManyToOne
@@ -39,7 +38,7 @@ public class Rezervacija {
 	
 	public Rezervacija() {}
 	
-	public Rezervacija(long id, Integer brojOsoba, Double cenaKarte, Date datum, boolean placeno, Film film, Sala sala) {
+	public Rezervacija(long id, Integer brojOsoba, Double cenaKarte, LocalDate datum, Boolean placeno, Film film, Sala sala) {
 
 		this.id = id;
 		this.brojOsoba = brojOsoba;
@@ -74,19 +73,19 @@ public class Rezervacija {
 		this.cenaKarte = cenaKarte;
 	}
 
-	public Date getDatum() {
+	public LocalDate getDatum() {
 		return datum;
 	}
 
-	public void setDatum(Date datum) {
+	public void setDatum(LocalDate datum) {
 		this.datum = datum;
 	}
 
-	public boolean isPlaceno() {
+	public Boolean isPlaceno() {
 		return placeno;
 	}
 
-	public void setPlaceno(boolean placeno) {
+	public void setPlaceno(Boolean placeno) {
 		this.placeno = placeno;
 	}
 

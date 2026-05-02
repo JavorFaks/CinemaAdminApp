@@ -1,13 +1,13 @@
 package rva.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import rva.model.Rezervacija;
 
-public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long>{
+public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long>,  JpaSpecificationExecutor<Rezervacija>{
 
 	//pretraga po stranom ključu
 	List<Rezervacija> findByFilm_Id(Long filmId);
@@ -17,14 +17,4 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long>{
 	List<Rezervacija> findBySala_Id(Long salaId);
 	
 	
-	//Sve neplacene rezervacije
-	List<Rezervacija> findByPlacenoFalse();
-	
-	
-	//Rezervacije za odredjeni datum
-	List<Rezervacija> findByDatum(Date datum);
-	
-	//Za istoriju rezervacija ili za predstojece rezervacije
-	List<Rezervacija> findByDatumBefore(Date datum);
-	List<Rezervacija> findByDatumAfter(Date datum);
 }

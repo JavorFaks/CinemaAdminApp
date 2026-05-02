@@ -1,10 +1,11 @@
 package rva.implementation;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -126,50 +127,59 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 		return r;
 	}
 	
-	@Override
-	public List<Rezervacija> getNeplaceneRezervacije()
-	{
-		List<Rezervacija> r = repo.findByPlacenoFalse();
-		
-		if(r.isEmpty()) {
-			throw new EntityNotFoundException("Trenutno nema rezervacija koje nisu placene.");
-		}
-		
-		return r;
-	}
 	
 	@Override
-	public List<Rezervacija> getRezervacijeZaDatum(Date datum)
+	public List<Rezervacija> naprednaPretraga(Long filmId, Long salaId, Boolean placeno, LocalDate datumOd, LocalDate datumDo)
 	{
-		
-		List<Rezervacija> r = repo.findByDatum(datum);
-		
-		if(r.isEmpty()) {
-			throw new EntityNotFoundException("Trenutno nema rezervacija za datum: " + datum.toString());
+		//Validacija stranih kljuceva
+		if (filmId != null && !filmService.existsById(filmId)) {
+            throw new EntityNotFoundException("Film sa ID-jem: " + filmId + " ne postoji.");
+        }
+        
+        if (salaId != null && !salaService.existsById(salaId)) {
+            throw new EntityNotFoundException("Sala sa ID-jem: " + salaId + " ne postoji.");
+        }
+        
+        
+        Specification<Rezervacija> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction(); //prazno
+        
+        
+        if(filmId!=null)
+		{
+			spec = spec.and((root, query, criteriaBuilder) -> 
+            criteriaBuilder.equal(root.get("film").get("id"), filmId)
+            );
 		}
 		
-		return r;
-	}
-	
-	@Override
-	public List<Rezervacija> getIstorijaRezervacija(Date datum)
-	{
-		List<Rezervacija> r = repo.findByDatumBefore(datum);
-		
-		if(r.isEmpty()) {
-			throw new EntityNotFoundException("Nema istorije rezervacija prije datuma: " + datum.toString());
+		if(salaId!=null)
+		{
+			spec = spec.and((root, query, criteriaBuilder) -> 
+            criteriaBuilder.equal(root.get("sala").get("id"), salaId)
+            );
 		}
 		
-		return r;
-	}
-	
-	@Override
-	public List<Rezervacija> getPredstojeceRezervacije(Date datum)
-	{
-		List<Rezervacija> r = repo.findByDatum(datum);
+		if (placeno != null) 
+		{
+	        spec = spec.and((root, query, criteriaBuilder) -> 
+	        criteriaBuilder.equal(root.get("placeno"), placeno));
+	    }
+		
+		if (datumOd != null) 
+		{
+	        spec = spec.and((root, query, criteriaBuilder) -> 
+	        criteriaBuilder.greaterThanOrEqualTo(root.get("datum"), datumOd));
+	    }
+		
+		if (datumDo != null) 
+		{
+	        spec = spec.and((root, query, criteriaBuilder) -> 
+	        criteriaBuilder.lessThanOrEqualTo(root.get("datum"), datumDo));
+	    }
+		
+		List<Rezervacija> r = repo.findAll(spec);
 		
 		if(r.isEmpty()) {
-			throw new EntityNotFoundException("Nema rezervacija poslije datuma: " + datum.toString());
+			throw new EntityNotFoundException("Nema rezervacija sa ovim kriterijumima.");
 		}
 		
 		return r;
