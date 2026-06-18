@@ -1,10 +1,11 @@
 package rva.implementation;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -31,14 +32,10 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 	private SalaService salaService;
 
 	@Override
-	public List<Rezervacija> getAll() {
-		List<Rezervacija> r = repo.findAll();
-		
-		if(r.isEmpty()) {
-			throw new EntityNotFoundException("Trenutno nema nijedne rezervacije.");
-		}
-		
-		return r;
+	public Page<Rezervacija> getAll(Pageable pageable) {
+			
+		//Ako je prazna lista vraca praznu listnu 200 OK, a ne 404
+		return repo.findAll(pageable);
 	}
 
 	@Override
@@ -98,12 +95,12 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 
 
 	@Override
-	public List<Rezervacija> getRezervacijeByFilm(Long filmId) {
+	public Page<Rezervacija> getRezervacijeByFilm(Long filmId, Pageable pageable) {
 		if(!filmService.existsById(filmId)) {
 			throw new EntityNotFoundException("Film sa ID-jem " + filmId + " ne postoji.");
 		}
 		
-		List<Rezervacija> r = repo.findByFilm_Id(filmId);
+		Page<Rezervacija> r = repo.findByFilm_Id(filmId, pageable);
 		
 		if(r.isEmpty()) {
 			throw new EntityNotFoundException("Trenutno nema rezervacija za film sa ID-jem " + filmId);
@@ -113,12 +110,12 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 	}
 	
 	@Override
-	public List<Rezervacija> getRezervacijeBySala(Long salaId) {
+	public Page<Rezervacija> getRezervacijeBySala(Long salaId, Pageable pageable) {
 		if(!salaService.existsById(salaId)) {
 			throw new EntityNotFoundException("Sala sa ID-jem " + salaId + " ne postoji.");
 		}
 		
-		List<Rezervacija> r = repo.findBySala_Id(salaId);
+		Page<Rezervacija> r = repo.findBySala_Id(salaId, pageable);
 		
 		if(r.isEmpty()) {
 			throw new EntityNotFoundException("Trenutno nema rezervacija za salu sa ID-jem " + salaId);
@@ -129,7 +126,7 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 	
 	
 	@Override
-	public List<Rezervacija> naprednaPretraga(Long filmId, Long salaId, Boolean placeno, LocalDate datumOd, LocalDate datumDo)
+	public Page<Rezervacija> naprednaPretraga(Long filmId, Long salaId, Boolean placeno, LocalDate datumOd, LocalDate datumDo, Pageable pageable)
 	{
 		//Validacija stranih kljuceva
 		if (filmId != null && !filmService.existsById(filmId)) {
@@ -176,7 +173,7 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 	        criteriaBuilder.lessThanOrEqualTo(root.get("datum"), datumDo));
 	    }
 		
-		List<Rezervacija> r = repo.findAll(spec);
+		Page<Rezervacija> r = repo.findAll(spec, pageable);
 		
 		if(r.isEmpty()) {
 			throw new EntityNotFoundException("Nema rezervacija sa ovim kriterijumima.");

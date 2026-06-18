@@ -2,10 +2,11 @@ package rva.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +30,9 @@ public class RezervacijaController {
 	
 	
 	@GetMapping("/rezervacija")
-	public ResponseEntity<List<Rezervacija>> getRezervacija(@RequestParam(required=false) Long id)
+	public ResponseEntity<Page<Rezervacija>> getRezervacija(Pageable pageable)
 	{
-		List<Rezervacija> r = service.getAll();
+		Page<Rezervacija> r = service.getAll(pageable);
 		return ResponseEntity.ok(r);
 	}
 	
@@ -44,30 +45,31 @@ public class RezervacijaController {
 	
 
 	@GetMapping("rezervacija/film")
-	public ResponseEntity<List<Rezervacija>> getRezervacijaByFilm(@RequestParam Long filmId)
+	public ResponseEntity<Page<Rezervacija>> getRezervacijaByFilm(@RequestParam Long filmId, Pageable pageable)
 	{
-		List<Rezervacija> rezervacije = service.getRezervacijeByFilm(filmId);
+		Page<Rezervacija> rezervacije = service.getRezervacijeByFilm(filmId, pageable);
 		
 		return ResponseEntity.ok(rezervacije);
 	}
 	
 	@GetMapping("/rezervacija/sala")
-	public ResponseEntity<List<Rezervacija>> getRezervacijaBySala(@RequestParam Long salaId)
+	public ResponseEntity<Page<Rezervacija>> getRezervacijaBySala(@RequestParam Long salaId, Pageable pageable)
 	{
-		List<Rezervacija> rezervacije = service.getRezervacijeBySala(salaId);
+		Page<Rezervacija> rezervacije = service.getRezervacijeBySala(salaId, pageable);
 		
 		return ResponseEntity.ok(rezervacije);
 		
 	}
 	
 	@GetMapping("/rezervacija/pretraga")
-	public ResponseEntity<List<Rezervacija>> naprednaPretraga(@RequestParam(required = false) Long filmId,
+	public ResponseEntity<Page<Rezervacija>> naprednaPretraga(@RequestParam(required = false) Long filmId,
 	        @RequestParam(required = false) Long salaId,
 	        @RequestParam(required = false) Boolean placeno, 
 	        @RequestParam(required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate datumOd,
-	        @RequestParam(required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate datumDo)
+	        @RequestParam(required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate datumDo,
+	        Pageable pageable)
 	{
-		List<Rezervacija> rezervacije = service.naprednaPretraga(filmId, salaId, placeno, datumOd, datumDo);
+		Page<Rezervacija> rezervacije = service.naprednaPretraga(filmId, salaId, placeno, datumOd, datumDo, pageable);
 		return ResponseEntity.ok(rezervacije);
 	}	
 	

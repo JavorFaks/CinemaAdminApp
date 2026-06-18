@@ -1,9 +1,11 @@
 package rva.service;
 
-import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CrudService<T> {
-	List<T>	getAll();
+	Page<T>	getAll(Pageable pageable);
 	boolean existsById(long id);
 	T findById(long id);
 	T create(T body);
