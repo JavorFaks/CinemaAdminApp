@@ -1,9 +1,10 @@
 package rva.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +26,9 @@ public class BioskopController {
 	private BioskopServiceImpl service;
 	
 	@GetMapping("/bioskop")
-	public ResponseEntity<List<Bioskop>> getBioskopi()
+	public ResponseEntity<Page<Bioskop>> getBioskopi(Pageable pageable)
 	{
-		List<Bioskop> bioskopi = service.getAll();
+		Page<Bioskop> bioskopi = service.getAll(pageable);
 		return ResponseEntity.ok(bioskopi);
 	}
 		
@@ -41,9 +42,9 @@ public class BioskopController {
 	}
 	
 	@GetMapping("/bioskop/grad")
-	public ResponseEntity<List<Bioskop>> getBioskopiPoGradu(@RequestParam String grad)
+	public ResponseEntity<Page<Bioskop>> getBioskopiPoGradu(@RequestParam String grad, Pageable pageable)
 	{
-		List<Bioskop> bioskopi = service.getBioskopPoGradu(grad);
+		Page<Bioskop> bioskopi = service.getBioskopPoGradu(grad, pageable);
 		
 		return ResponseEntity.ok(bioskopi);
 

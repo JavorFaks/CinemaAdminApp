@@ -1,11 +1,11 @@
 package rva.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import rva.model.Bioskop;
 
 public interface BioskopRepository extends JpaRepository<Bioskop, Long>{
-	List<Bioskop> findByAdresaContainingIgnoreCase(String grad);
+	Page<Bioskop> findByAdresaContainingIgnoreCase(String grad, Pageable pageable);
 }

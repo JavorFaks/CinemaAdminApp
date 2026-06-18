@@ -1,9 +1,10 @@
 package rva.implementation;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -19,12 +20,9 @@ public class BioskopServiceImpl implements BioskopService {
 	private BioskopRepository repo;
 	
 	@Override
-	public List<Bioskop> getAll() {
-		List<Bioskop> bioskopi = repo.findAll();
+	public Page<Bioskop> getAll(Pageable pageable) {
+		Page<Bioskop> bioskopi = repo.findAll(pageable);
 		
-		if(bioskopi.isEmpty()) {
-			throw new EntityNotFoundException("Trenutno nema nijednog bioskopa.");
-		}
 		return bioskopi;
 	}
 
@@ -69,9 +67,9 @@ public class BioskopServiceImpl implements BioskopService {
 	}
 	
 	@Override
-	public List<Bioskop> getBioskopPoGradu(String grad)
+	public Page<Bioskop> getBioskopPoGradu(String grad, Pageable pageable)
 	{
-		List<Bioskop> bioskopi = repo.findByAdresaContainingIgnoreCase(grad);
+		Page<Bioskop> bioskopi = repo.findByAdresaContainingIgnoreCase(grad, pageable);
 		
 		if(bioskopi.isEmpty()) {
 			throw new EntityNotFoundException("Bioskop iz ovog grada ne postoje.");
