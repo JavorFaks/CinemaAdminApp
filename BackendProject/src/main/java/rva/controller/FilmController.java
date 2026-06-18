@@ -1,9 +1,10 @@
 package rva.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +25,9 @@ public class FilmController {
 	private FilmServiceImpl service;
 	
 	@GetMapping("/film")
-	public ResponseEntity<List<Film>> getFilm()
+	public ResponseEntity<Page<Film>> getFilm(Pageable pageable)
 	{
-		List<Film> filmovi = service.getAll();
+		Page<Film> filmovi = service.getAll(pageable);
 		return ResponseEntity.ok(filmovi);
 	}
 	
@@ -38,12 +39,13 @@ public class FilmController {
 	}
 	
 	@GetMapping("/film/pretraga")
-	public ResponseEntity<List<Film>> naprednaPretraga(
+	public ResponseEntity<Page<Film>> naprednaPretraga(
 	        @RequestParam(required = false) String naziv,
 	        @RequestParam(required = false) String zanr,
-	        @RequestParam(required = false) Integer maxMinuta
+	        @RequestParam(required = false) Integer maxMinuta,
+	        Pageable pageable
 	) {
-	    List<Film> filmovi = service.naprednaPretraga(naziv, zanr, maxMinuta);
+		Page<Film> filmovi = service.naprednaPretraga(naziv, zanr, maxMinuta, pageable);
 	    
 	    return ResponseEntity.ok(filmovi);
 	}

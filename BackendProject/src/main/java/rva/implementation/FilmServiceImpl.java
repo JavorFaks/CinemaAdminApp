@@ -1,9 +1,10 @@
 package rva.implementation;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +20,9 @@ public class FilmServiceImpl implements FilmService{
 	private FilmRepository repo;
 	
 	@Override
-	public List<Film> getAll() {
-		List<Film> filmovi = repo.findAll();
-		if(filmovi.isEmpty()) {
-			throw new EntityNotFoundException("Trenutno nema nijednog filma.");
-		}
+	public Page<Film> getAll(Pageable pageable) {
+		Page<Film> filmovi = repo.findAll(pageable);
+
 		return filmovi;
 	}
 
@@ -71,7 +70,7 @@ public class FilmServiceImpl implements FilmService{
 	}
 
 	@Override
-	public List<Film> naprednaPretraga(String naziv, String zanr, Integer maxMinuta) {
+	public Page<Film> naprednaPretraga(String naziv, String zanr, Integer maxMinuta, Pageable pageable) {
 		
 		Specification<Film> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction(); //Prazno
 		
@@ -100,7 +99,7 @@ public class FilmServiceImpl implements FilmService{
 			);
 		}
 		
-		List<Film> filmovi = repo.findAll(spec);
+		Page<Film> filmovi = repo.findAll(spec, pageable);
 		
 		
 		if(filmovi.isEmpty()) {
