@@ -1,9 +1,10 @@
 package rva.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +26,8 @@ public class SalaController {
 	private SalaService salaService;
 	
 	@GetMapping("/sala")
-	public ResponseEntity<List<Sala>> getSala() {
-		List<Sala> sale = salaService.getAll();
+	public ResponseEntity<Page<Sala>> getSala(Pageable pageable) {
+		Page<Sala> sale = salaService.getAll(pageable);
 		return ResponseEntity.ok(sale);
 	}
 	
@@ -37,23 +38,24 @@ public class SalaController {
 	}
 	
 	@GetMapping("/sala/bioskop")
-	public ResponseEntity<List<Sala>> getSalaByBioskop(@RequestParam Long bioskopId)
+	public ResponseEntity<Page<Sala>> getSalaByBioskop(@RequestParam Long bioskopId, Pageable pageable)
 	{
-		List<Sala> sale = salaService.getSaleByBioskop(bioskopId);
+		Page<Sala> sale = salaService.getSaleByBioskop(bioskopId, pageable);
 		
 		return ResponseEntity.ok(sale);
 	}
 	
 	
 	@GetMapping("/sala/pretraga")
-	public ResponseEntity<List<Sala>> naprednaPretraga(
+	public ResponseEntity<Page<Sala>> naprednaPretraga(
 	        @RequestParam(required = false) Integer kapacitet,
 	        @RequestParam(required = false) Integer brojRedova,
-	        @RequestParam(required = false) Long bioskopId
+	        @RequestParam(required = false) Long bioskopId,
+	        Pageable pageable
 	) {
 		
 		
-	    List<Sala> sale = salaService.naprednaPretraga(kapacitet, brojRedova, bioskopId);
+	    Page<Sala> sale = salaService.naprednaPretraga(kapacitet, brojRedova, bioskopId, pageable);
 	   
 	    
 	    return ResponseEntity.ok(sale);

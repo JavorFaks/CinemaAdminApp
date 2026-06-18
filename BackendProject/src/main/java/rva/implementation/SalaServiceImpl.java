@@ -1,9 +1,10 @@
 package rva.implementation;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +25,8 @@ public class SalaServiceImpl implements SalaService {
 	private BioskopService bService;
 	
 	@Override
-	public List<Sala> getAll() {
-		List<Sala> sale = repo.findAll();
-		
-		if(sale.isEmpty()) {
-			throw new EntityNotFoundException("Trenutno nema nijedne sale.");
-		}
+	public Page<Sala> getAll(Pageable pageable) {
+		Page<Sala> sale = repo.findAll(pageable);
 		
 		return sale;
 	}
@@ -93,11 +90,11 @@ public class SalaServiceImpl implements SalaService {
 	}
 
 	@Override
-	public List<Sala> getSaleByBioskop(Long bioskopId) {
+	public Page<Sala> getSaleByBioskop(Long bioskopId, Pageable pageable) {
 		if(!bService.existsById(bioskopId)) {
 			throw new EntityNotFoundException("Bioskop sa ID-jem " + bioskopId + " ne postoji.");
 		} else {
-			List<Sala> sale = repo.findByBioskop_Id(bioskopId);
+			Page<Sala> sale = repo.findByBioskop_Id(bioskopId, pageable);
 			if(sale.isEmpty()) {
 				throw new EntityNotFoundException("Trenutno ne postoje sale u bioskopu sa ID-jem " + bioskopId);
 			} else {
@@ -109,7 +106,7 @@ public class SalaServiceImpl implements SalaService {
 	}
 	
 	@Override 
-	public List<Sala> naprednaPretraga(Integer kapacitet, Integer brojRedova, Long bioskopId)
+	public Page<Sala> naprednaPretraga(Integer kapacitet, Integer brojRedova, Long bioskopId, Pageable pageable)
 	{
 		Specification<Sala> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction(); //prazno
 		
@@ -135,7 +132,7 @@ public class SalaServiceImpl implements SalaService {
 	        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("bioskop").get("id"), bioskopId));
 	    }
 		
-		List<Sala> sale = repo.findAll(spec);
+		Page<Sala> sale = repo.findAll(spec, pageable);
 		
 		if(sale.isEmpty()) {
 			throw new EntityNotFoundException("Trenutno nema sala sa ovim kriterijumima");
