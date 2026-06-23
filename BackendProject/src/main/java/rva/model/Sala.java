@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -21,7 +22,13 @@ public class Sala {
 	@SequenceGenerator(name = "sala_seq", sequenceName = "sala_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sala_seq")
 	private long id;
+	
+	@NotNull(message = "Kapacitet je obavezan.")
+	@Min(value = 1, message = "Kapacitet mora biti veci od 0.")
 	private Integer kapacitet;
+	
+	@NotNull(message = "Broj redova je obavezan.")
+	@Min(value = 1, message = "Broj redova mora biti veci od 0.")
 	private Integer brojRedova;
 	
 	@NotNull(message = "Bioskop je obavezan")

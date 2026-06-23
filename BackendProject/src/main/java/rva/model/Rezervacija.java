@@ -11,7 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 public class Rezervacija {
@@ -19,10 +21,16 @@ public class Rezervacija {
 	@SequenceGenerator(name = "rezervacija_seq", sequenceName = "rezervacija_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rezervacija_seq")
 	private long id;
+	
+	@NotNull(message = "Broj osoba je obavezan.")
+	@Min(value = 1, message = "Mora postojati bar jedna osoba u rezervaciji.")
 	private Integer brojOsoba;
 	
+	@NotNull(message = "Cena karte je obavezna.")
+	@PositiveOrZero(message = "Cena karte ne moze biti negativna.")
 	private Double cenaKarte;
 	
+	@NotNull(message = "Datum rezervacije je obavezan.")
 	private LocalDate datum; //LocalDate da se ne zamaramo vremenskim zonama
 	private Boolean placeno;
 	
