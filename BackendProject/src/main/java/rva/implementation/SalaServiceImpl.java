@@ -67,7 +67,7 @@ public class SalaServiceImpl implements SalaService {
 		if(repo.existsById(id)) {
 			body.setId(id);
 			if(!bService.existsById(body.getBioskop().getId())) {
-				throw new EntityNotFoundException("Bioskop sa ID-jem " + id + " ne postoji.");
+				throw new EntityNotFoundException("Bioskop sa ID-jem " + body.getBioskop().getId() + " ne postoji.");
 			}
 			return repo.save(body);
 		} else {

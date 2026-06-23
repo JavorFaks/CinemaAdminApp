@@ -56,6 +56,17 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 
 	@Override
 	public Rezervacija create(Rezervacija body) {
+		Long filmId = body.getFilm().getId();
+		Long salaId = body.getSala().getId();
+		
+		if(!filmService.existsById(filmId)) {
+			throw new EntityNotFoundException("Film sa ID-jem " + filmId + " ne postoji.");
+		}
+		
+		if(!salaService.existsById(salaId)) {
+			throw new EntityNotFoundException("Sala sa ID-jem " + salaId + " ne postoji.");
+		}
+		
 		return repo.save(body);
 	}
 
