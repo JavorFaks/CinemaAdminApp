@@ -50,7 +50,7 @@ public class SalaServiceImpl implements SalaService {
 	@Override
 	public Sala create(Sala sala) {
 		// Da li je korisnik uopšte poslao Bioskop
-	    if (sala.getBioskop() == null || sala.getBioskop().getId() == 0) {
+	    if (sala.getBioskop() == null || sala.getBioskop().getId() == null) {
 	        throw new IllegalArgumentException("Morate poslati ID bioskopa.");
 	    }
 

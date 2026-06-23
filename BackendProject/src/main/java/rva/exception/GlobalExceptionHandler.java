@@ -67,6 +67,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
+	//Kad klijent posalje nepotpune/neispravne podatke
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
+	    ApiError apiError = new ApiError(
+	            HttpStatus.BAD_REQUEST.value(),
+	            "Bad Request",
+	            ex.getMessage(),
+	            request.getRequestURI()
+	    );
+
+	    return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+	}
+	
 	//Hvata greske baze (npr nepostojeci strani kljuc)
 	@ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleSQLConstraints(DataIntegrityViolationException ex, HttpServletRequest request) {

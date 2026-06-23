@@ -56,8 +56,19 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 
 	@Override
 	public Rezervacija create(Rezervacija body) {
-		Long filmId = body.getFilm().getId();
+		// Da li je korisnik uopšte poslao film
+	    if (body.getFilm() == null || body.getFilm().getId() == null) {
+	        throw new IllegalArgumentException("Morate poslati ID filma.");
+	    }
+		
+	    // Da li je korisnik uopšte poslao salu
+	    if (body.getSala() == null || body.getSala().getId() == null) {
+	        throw new IllegalArgumentException("Morate poslati ID sale.");
+	    }
+		
+	    Long filmId = body.getFilm().getId();
 		Long salaId = body.getSala().getId();
+		
 		
 		if(!filmService.existsById(filmId)) {
 			throw new EntityNotFoundException("Film sa ID-jem " + filmId + " ne postoji.");
