@@ -20,7 +20,7 @@ public class Rezervacija {
 	@Id
 	@SequenceGenerator(name = "rezervacija_seq", sequenceName = "rezervacija_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rezervacija_seq")
-	private long id;
+	private Long id;
 	
 	@NotNull(message = "Broj osoba je obavezan.")
 	@Min(value = 1, message = "Mora postojati bar jedna osoba u rezervaciji.")
@@ -46,7 +46,7 @@ public class Rezervacija {
 	
 	public Rezervacija() {}
 	
-	public Rezervacija(long id, Integer brojOsoba, Double cenaKarte, LocalDate datum, Boolean placeno, Film film, Sala sala) {
+	public Rezervacija(Long id, Integer brojOsoba, Double cenaKarte, LocalDate datum, Boolean placeno, Film film, Sala sala) {
 
 		this.id = id;
 		this.brojOsoba = brojOsoba;
@@ -57,11 +57,11 @@ public class Rezervacija {
 		this.sala = sala;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

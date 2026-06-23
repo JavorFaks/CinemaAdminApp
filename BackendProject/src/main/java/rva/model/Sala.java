@@ -21,7 +21,7 @@ public class Sala {
 	@Id
 	@SequenceGenerator(name = "sala_seq", sequenceName = "sala_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sala_seq")
-	private long id;
+	private Long id;
 	
 	@NotNull(message = "Kapacitet je obavezan.")
 	@Min(value = 1, message = "Kapacitet mora biti veci od 0.")
@@ -42,7 +42,7 @@ public class Sala {
 	
 	public Sala() {}
 	
-	public Sala(long id, Integer kapacitet, Integer brojRedova, Bioskop bioskop) {
+	public Sala(Long id, Integer kapacitet, Integer brojRedova, Bioskop bioskop) {
 		
 		this.id = id;
 		this.kapacitet = kapacitet;
@@ -50,11 +50,11 @@ public class Sala {
 		this.bioskop = bioskop;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

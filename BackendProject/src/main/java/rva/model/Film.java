@@ -22,7 +22,7 @@ public class Film {
 	@Id
 	@SequenceGenerator(name = "film_seq", sequenceName = "film_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "film_seq")
-	private long id;
+	private Long id;
 	
 	@NotBlank(message = "Naziv filma je obavezan i ne sme biti prazan.")
 	private String naziv;
@@ -42,18 +42,18 @@ public class Film {
 	
 	public Film() {}
 	
-	public Film(long id, String naziv, Integer recenzija, String zanr) {
+	public Film(Long id, String naziv, Integer recenzija, String zanr) {
 		this.id = id;
 		this.naziv = naziv;
 		this.recenzija = recenzija;
 		this.zanr = zanr;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
