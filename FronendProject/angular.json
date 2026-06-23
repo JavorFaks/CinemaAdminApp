@@ -2,14 +2,25 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": "4930fd28-2216-4d59-8a07-a84ad9a8f170"
   },
   "newProjectRoot": "projects",
   "projects": {
     "FronendProject": {
       "projectType": "application",
       "schematics": {
-          "@schematics/angular:component": {
+        "@schematics/angular:component": {
+          "type": "component",
+          "standalone": true,
+          "style": "css",
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "type": "service",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
           "skipTests": true
         }
       },
@@ -28,9 +39,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ]
+            "styles": ["src/material-theme.scss", "src/styles.css"]
           },
           "configurations": {
             "production": {
