@@ -95,11 +95,12 @@ class RezervacijaControllerIntegrationTest {
 	    
 	    // Moramo postaviti i relacije da baza ne bi bacila 500 grešku
 	    Film film = new Film();
-	    film.setId(1); 
+	    Long id = 1L;
+	    film.setId(id); 
 	    rezervacija.setFilm(film);
 	    
 	    Sala sala = new Sala();
-	    sala.setId(1); 
+	    sala.setId(id); 
 	    rezervacija.setSala(sala);
 
 	    HttpEntity<Rezervacija> entity = new HttpEntity<>(rezervacija);
