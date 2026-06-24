@@ -1,0 +1,75 @@
+<div class="page-container">
+
+  <div class="page-header-row">
+    <div>
+      <h1>Filmovi</h1>
+      <p class="page-subtitle">{{ totalElements }} {{ totalElements === 1 ? 'film' : 'filmova' }}</p>
+    </div>
+    <button class="btn-add" (click)="openDialog(1)">
+      <mat-icon>add</mat-icon>
+      Dodaj film
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <mat-icon>search</mat-icon>
+    <input type="text" placeholder="Pretrazi filmove...">
+  </div>
+
+  <div class="page-layout">
+    <section class="table-panel">
+      <table mat-table matSort (matSortChange)="onSortChange($event)" [dataSource]="dataSource">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="naziv">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Naziv</th>
+          <td mat-cell *matCellDef="let row">{{ row.naziv }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="recenzija">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Recenzija</th>
+          <td mat-cell *matCellDef="let row">{{ row.recenzija }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="trajanje">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Trajanje</th>
+          <td mat-cell *matCellDef="let row">{{ row.trajanje }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="zanr">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Zanr</th>
+          <td mat-cell *matCellDef="let row">{{ row.zanr }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <button mat-icon-button (click)="openDialog(2, row.id, row.naziv, row.recenzija, row.trajanje, row.zanr)">
+                <mat-icon class="icon-edit" aria-label="Edit">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDialog(3, row.id, row.naziv, row.recenzija, row.trajanje, row.zanr)">
+                    <mat-icon class="icon-delete" aria-label="Delete">delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[3,5,10]"
+        showFirstLastButtons
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </section>
+  </div>
+
+</div>
