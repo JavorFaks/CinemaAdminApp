@@ -1,0 +1,89 @@
+<div class="container">
+  @if (flag === 1) {
+    <h3 mat-dialog-title>Dodavanje rezervacije</h3>
+  } @else if (flag === 2) {
+    <h3 mat-dialog-title>Izmjena rezervacije: {{ data.id }}</h3>
+  } @else if (flag === 3) {
+    <h3 mat-dialog-title>Brisanje rezervacije: {{ data.id }}</h3>
+  }
+
+  <form class="mat-dialog-content" #formControl="ngForm">
+    <div class="form">
+      
+      <mat-form-field>
+        <mat-label>Broj osoba</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="Broj osoba"
+          name="brojOsoba"
+          [disabled]="flag == 3"
+          [(ngModel)]="data.brojOsoba"
+          required
+        />
+      </mat-form-field>
+    </div>
+    
+  <div class="form">
+      <mat-form-field>
+        <mat-label>Cena Karte</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="Cena Karte"
+          name="cenaKarte"
+          [disabled]="flag == 3"
+          [(ngModel)]="data.cenaKarte"
+          required
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="form">
+      <mat-form-field>
+        <mat-label>Datum</mat-label>
+        <input
+          matInput
+          type="date"
+          placeholder="Datum"
+          name="datum"
+          [disabled]="flag == 3"
+          [(ngModel)]="data.datum"
+          required
+        />
+        
+      </mat-form-field>
+    </div>
+
+    <div class="form">
+      <mat-form-field>
+      <mat-label>Film</mat-label>
+      <mat-select [compareWith]="compare" name="film" [disabled]="flag == 3" [(ngModel)]="data.film" required>
+        @for (film of filmovi; track film.id) {
+          <mat-option [value]="film">{{ film.naziv }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    </div>
+
+
+    <div class="form">
+       <mat-checkbox name="placeno" [disabled]="flag == 3" [(ngModel)]="data.placeno">
+        Placeno
+      </mat-checkbox>
+    </div>
+  </form>
+
+  <div class="mat-dialog-actions">
+    @if (flag === 1) {
+      <button matButton type="submit" [disabled]="!formControl.valid" (click)="add()">Save</button>
+    } @else if (flag === 2) {
+      <button matButton type="submit" [disabled]="!formControl.valid" (click)="update()">Update</button>
+    } @else if (flag === 3) {
+      <button matButton (click)="delete()">Delete</button>
+    }
+
+    <button matButton (click)="cancel()">Cancel</button>
+  </div>
+</div>

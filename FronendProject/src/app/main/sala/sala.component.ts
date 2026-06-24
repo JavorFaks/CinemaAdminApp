@@ -1,21 +1,22 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-
 import { Sala } from '../../models/sala';
 import { SalaService } from '../../services/sala.service';
 import { SalaDialogComponent } from '../../dialogs/sala-dialog/sala-dialog.component';
 
+import { RezervacijaComponent } from '../rezervacija/rezervacija.component';
+
+
 @Component({
   selector: 'app-sala',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule, MatSortModule, MatPaginatorModule, MatButtonModule],
+  imports: [CommonModule, MatTableModule, MatIconModule, MatSortModule, MatPaginatorModule, MatButtonModule, RezervacijaComponent],
   templateUrl: './sala.component.html',
   styleUrl: './sala.component.css',
 })
@@ -28,6 +29,8 @@ export class SalaComponent implements OnInit {
   pageSize = 5;
   sortField = '';
   sortDirection = '';
+
+  parentSelectedSala!: Sala; // Selected sala za dijete
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -49,6 +52,10 @@ export class SalaComponent implements OnInit {
       },
       error: (err) => console.log(err)
     });
+  }
+
+  public selectRow  (row: Sala) {
+    this.parentSelectedSala = row;
   }
 
   // Handle page change event
