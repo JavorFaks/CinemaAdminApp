@@ -1,5 +1,19 @@
-<nav style="padding: 12px; display: flex; gap: 12px;">
-  <a routerLink="/bioskop">Bioskop</a>
-</nav>
+<header class="app-header">
+  <a routerLink="/" class="brand">Pocetna</a>
 
-<router-outlet></router-outlet>
+  <nav class = "main-nav">
+    <a routerLink="/bioskop" routerLinkActive="active">Bioskopi</a>
+    <a routerLink="/sala" routerLinkActive="active">Sale</a>
+    <a routerLink="/film" routerLinkActive="active">Fimovi</a>
+  </nav>
+
+  <nav class="secondary-nav">
+    <a routerLink="/about" routerLinkActive="active">O nama</a>
+    <a routerLink="/author" routerLinkActive="active">Autor</a>
+  </nav>
+</header>
+
+
+<main class="app-main">
+  <router-outlet></router-outlet>
+</main>

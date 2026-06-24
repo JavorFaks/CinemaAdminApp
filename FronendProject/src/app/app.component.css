@@ -1,0 +1,65 @@
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 60px;
+  padding: 0 32px;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.brand {
+  color: var(--color-text-primary);
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  margin-right: 32px;
+}
+
+.main-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.main-nav a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.main-nav a:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+}
+
+.main-nav a.active {
+  color: var(--color-accent);
+  background-color: var(--color-accent-soft);
+}
+
+.secondary-nav {
+  display: flex;
+  gap: 20px;
+  margin-left: auto;
+}
+
+.secondary-nav a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.secondary-nav a:hover,
+.secondary-nav a.active {
+  color: var(--color-text-primary);
+}
+
+.app-main {
+  min-height: calc(100vh - 60px);
+  background-color: var(--color-bg);
+}

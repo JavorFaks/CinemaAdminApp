@@ -1,14 +1,121 @@
+.page-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.page-header-row h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+
+.page-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-add:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 24px;
+  max-width: 420px;
+}
+
+.search-bar mat-icon {
+  color: var(--color-text-secondary);
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--color-text-primary);
+}
+
+.page-layout {
+  display: flex;
+  gap: 24px;
+}
+
+.table-panel {
+  flex: 1;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
 table {
   width: 100%;
 }
 
-mat-toolbar {
-  justify-content: center;
-  background-color: green;
+th[mat-header-cell] {
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--color-border) !important;
 }
 
-button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
+td[mat-cell] {
+  font-size: 14px;
+  color: var(--color-text-primary);
+}
+
+tr[mat-row]:hover {
+  background-color: var(--color-bg);
+}
+
+.icon-edit,
+.icon-delete {
+  color: var(--color-text-secondary);
+}
+
+button[mat-icon-button]:hover .icon-edit {
+  color: var(--color-accent);
+}
+
+button[mat-icon-button]:hover .icon-delete {
+  color: #DC2626;
 }
