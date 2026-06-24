@@ -1,1 +1,49 @@
-<p>bioskop-dialog works!</p>
+<div class="container">
+  @if (flag === 1) {
+    <h3 mat-dialog-title>Dodavanje bioskopa</h3>
+  } @else if (flag === 2) {
+    <h3 mat-dialog-title>Izmjena bioskopa: {{ data.naziv }}</h3>
+  } @else if (flag === 3) {
+    <h3 mat-dialog-title>Brisanje bioskopa: {{ data.naziv }}</h3>
+  }
+
+  <form class="mat-dialog-content" #formControl="ngForm">
+    <div class="form">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Naziv"
+          name="naziv"
+          [disabled]="flag == 3"
+          [(ngModel)]="data.naziv"
+          required
+        />
+      </mat-form-field>
+    </div>
+    
+    <div class="form">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Adresa"
+          name="adresa"
+          [disabled]="flag == 3"
+          [(ngModel)]="data.adresa"
+          required
+        />
+      </mat-form-field>
+    </div>
+  </form>
+
+  <div class="mat-dialog-actions">
+    @if (flag === 1) {
+      <button matButton type="submit" [disabled]="!formControl.valid" (click)="add()">Save</button>
+    } @else if (flag === 2) {
+      <button matButton type="submit" [disabled]="!formControl.valid" (click)="update()">Update</button>
+    } @else if (flag === 3) {
+      <button matButton (click)="delete()">Delete</button>
+    }
+
+    <button matButton (click)="cancel()">Cancel</button>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+table {
+  width: 100%;
+}
+
+mat-toolbar {
+  justify-content: center;
+  background-color: green;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
