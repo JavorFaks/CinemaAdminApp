@@ -1,0 +1,45 @@
+<div class="page-container">
+
+  <section class="hero">
+    <h1>Administracija bioskopske mreze</h1>
+    <p class="hero-subtitle">Pregled i upravljanje bioskopima, salama, filmovima i rezervacijama na jednom mjestu.</p>
+  </section>
+
+  <section class="stats-row">
+    <div class="stat-card">
+      <span class="stat-value">{{ brojBioskopa() }}</span>
+      <span class="stat-label">Bioskopa</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ brojSala() }}</span>
+      <span class="stat-label">Sala</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ brojFilmova() }}</span>
+      <span class="stat-label">Filmova</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ brojRezervacija() }}</span>
+      <span class="stat-label">Rezervacija</span>
+    </div>
+  </section>
+
+  <section class="nav-cards">
+    <a class="nav-card" routerLink="/bioskop">
+      <mat-icon>theaters</mat-icon>
+      <h3>Bioskopi</h3>
+      <p>Pregled i upravljanje bioskopima u mrezi.</p>
+    </a>
+    <a class="nav-card" routerLink="/sala">
+      <mat-icon>chair</mat-icon>
+      <h3>Sale</h3>
+      <p>Sale po bioskopima i njihove rezervacije.</p>
+    </a>
+    <a class="nav-card" routerLink="/film">
+      <mat-icon>movie</mat-icon>
+      <h3>Filmovi</h3>
+      <p>Katalog filmova dostupnih za prikazivanje.</p>
+    </a>
+  </section>
+
+</div>
