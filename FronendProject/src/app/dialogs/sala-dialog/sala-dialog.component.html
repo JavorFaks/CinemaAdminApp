@@ -1,0 +1,64 @@
+<div class="container">
+  @if (flag === 1) {
+    <h3 mat-dialog-title>Dodavanje sale</h3>
+  } @else if (flag === 2) {
+    <h3 mat-dialog-title>Izmjena sale: {{ data.id }}</h3>
+  } @else if (flag === 3) {
+    <h3 mat-dialog-title>Brisanje sale: {{ data.id }}</h3>
+  }
+
+  <form class="mat-dialog-content" #formControl="ngForm">
+    <div class="form">
+      
+      <mat-form-field>
+        <mat-label>Kapacitet</mat-label>
+        <input
+          matInput
+          placeholder="Kapacitet"
+          name="kapacitet"
+          [disabled]="flag == 3"
+          [(ngModel)]="data.kapacitet"
+          required
+        />
+      </mat-form-field>
+    </div>
+    
+  <div class="form">
+      <mat-form-field>
+        <mat-label>Broj Redova</mat-label>
+        <input
+          matInput
+          placeholder="Broj Redova"
+          name="brojRedova"
+          [disabled]="flag == 3"
+          [(ngModel)]="data.brojRedova"
+          required
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="form">
+      <mat-form-field>
+        <mat-label>Bioskop</mat-label>
+        <mat-select [compareWith]="compare" name="bioskop" [disabled]="flag == 3" [(ngModel)]="data.bioskop" required>
+        @for (bioskop of bioskopi; track bioskop.id) {
+          <mat-option [value]="bioskop">{{ bioskop.naziv }}</mat-option>
+        }
+      </mat-select>
+      </mat-form-field>
+    </div>
+
+  </form>
+
+  <div class="mat-dialog-actions">
+    @if (flag === 1) {
+      <button matButton type="submit" [disabled]="!formControl.valid" (click)="add()">Save</button>
+    } @else if (flag === 2) {
+      <button matButton type="submit" [disabled]="!formControl.valid" (click)="update()">Update</button>
+    } @else if (flag === 3) {
+      <button matButton (click)="delete()">Delete</button>
+    }
+
+    <button matButton (click)="cancel()">Cancel</button>
+  </div>
+</div>

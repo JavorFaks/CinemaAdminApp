@@ -1,0 +1,70 @@
+<div class="page-container">
+
+  <div class="page-header-row">
+    <div>
+      <h1>Sale</h1>
+      <p class="page-subtitle">{{ totalElements }} {{ totalElements === 1 ? 'sala' : 'sala' }}</p>
+    </div>
+    <button class="btn-add" (click)="openDialog(1)">
+      <mat-icon>add</mat-icon>
+      Dodaj salu
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <mat-icon>search</mat-icon>
+    <input type="text" placeholder="Pretrazi sale...">
+  </div>
+
+  <div class="page-layout">
+    <section class="table-panel">
+      <table mat-table matSort (matSortChange)="onSortChange($event)" [dataSource]="dataSource">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="kapacitet">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Kapacitet</th>
+          <td mat-cell *matCellDef="let row">{{ row.kapacitet }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="brojRedova">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Broj redova</th>
+          <td mat-cell *matCellDef="let row">{{ row.brojRedova }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="bioskop">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Bioskop</th>
+          <td mat-cell *matCellDef="let row">{{ row.bioskop?.naziv }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <button mat-icon-button (click)="openDialog(2, row)">
+                <mat-icon class="icon-edit" aria-label="Edit">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDialog(3, row)">
+                    <mat-icon class="icon-delete" aria-label="Delete">delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[3,5,10]"
+        showFirstLastButtons
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </section>
+  </div>
+
+</div>
