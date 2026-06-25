@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { Film } from '../../models/film';
 import { FilmService } from '../../services/film.service';
@@ -24,7 +25,7 @@ import { SalaService } from '../../services/sala.service';
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatTableModule, MatIconModule, MatButtonModule,
-    MatFormFieldModule, MatInputModule, MatSelectModule, MatSortModule, MatPaginatorModule
+    MatFormFieldModule, MatInputModule, MatSelectModule, MatSortModule, MatPaginatorModule, MatDatepickerModule
   ],
   templateUrl: './rezervacija.component.html',
   styleUrl: './rezervacija.component.css',
@@ -44,8 +45,8 @@ export class RezervacijaComponent implements OnChanges, OnInit{
   filterFilmId: number | null = null;
   filterSalaId: number | null = null;
   filterPlaceno: boolean | null = null;
-  filterDatumOd = '';
-  filterDatumDo = '';
+  filterDatumOdValue: Date | null = null;
+  filterDatumDoValue: Date | null = null;
 
   filmovi = signal<Film[]>([]);
   sale = signal<Sala[]>([]);
@@ -97,13 +98,15 @@ export class RezervacijaComponent implements OnChanges, OnInit{
   public loadData(){
     const sort = this.sortField ? `${this.sortField},${this.sortDirection}` : undefined;
     const salaId = this.isNested ? this.childSelectedSala!.id : this.filterSalaId;
+    const datumOd = this.formatDate(this.filterDatumOdValue);
+    const datumDo = this.formatDate(this.filterDatumDoValue);
 
     this.service.naprednaPretraga(
       this.filterFilmId,
       salaId,
       this.filterPlaceno,
-      this.filterDatumOd || null,
-      this.filterDatumDo || null,
+      datumOd || null,
+      datumDo || null,
       this.pageIndex,
       this.pageSize,
       sort
@@ -125,8 +128,8 @@ export class RezervacijaComponent implements OnChanges, OnInit{
     this.filterFilmId = null;
     this.filterSalaId = null;
     this.filterPlaceno = null;
-    this.filterDatumOd = '';
-    this.filterDatumDo = '';
+    this.filterDatumOdValue = null;
+    this.filterDatumDoValue = null;
     this.applyFilters();
   }
 
@@ -165,5 +168,14 @@ export class RezervacijaComponent implements OnChanges, OnInit{
         this.loadData();
       }
     });
+  }
+
+
+  private formatDate(date: Date | null): string {
+    if (!date) { return ''; }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
  }

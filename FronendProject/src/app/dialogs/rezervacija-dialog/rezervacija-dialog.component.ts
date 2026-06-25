@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { Film } from '../../models/film';
 import { FilmService } from '../../services/film.service';
@@ -22,13 +22,14 @@ import { Sala } from '../../models/sala';
 @Component({
   selector: 'app-rezervacija-dialog',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatInputModule, MatSelectModule, MatCheckboxModule, FormsModule, MatFormFieldModule],
+  imports: [MatDialogModule, MatButtonModule, MatInputModule, MatSelectModule, MatCheckboxModule, FormsModule, MatFormFieldModule, MatDatepickerModule],
   templateUrl: './rezervacija-dialog.component.html',
   styleUrl: './rezervacija-dialog.component.css',
 })
 export class RezervacijaDialogComponent implements OnInit {
   showSalaSelect = false;
 
+  datumValue: Date | null = null;
   flag!: number;
   filmovi = signal<Film[]>([]);
   sale = signal<Sala[]>([]);
@@ -46,6 +47,7 @@ export class RezervacijaDialogComponent implements OnInit {
   //Ocitavanje stranih kljuceva filma
   ngOnInit(): void {
     this.showSalaSelect = !this.data.sala;
+    this.datumValue = this.data.datum ? this.parseDate(this.data.datum) : null;
 
     this.filmService.getAll(0, 100).subscribe({
       next: (response) => this.filmovi.set(response.content),
@@ -70,6 +72,7 @@ export class RezervacijaDialogComponent implements OnInit {
 
   //Dodavanje filma
   public add(): void {
+    this.data.datum = this.formatDate(this.datumValue);
     this.service.createRezervacija(this.data).subscribe({
       next: () => {
         this.dialogRef.close(1);
@@ -84,6 +87,7 @@ export class RezervacijaDialogComponent implements OnInit {
 
   //Izmjena filma
   public update(): void {
+    this.data.datum = this.formatDate(this.datumValue);
     this.service.updateRezervacija(this.data).subscribe({
       next: () =>{
         this.dialogRef.close(1);
@@ -113,5 +117,18 @@ export class RezervacijaDialogComponent implements OnInit {
   // Izlazak iz dijaloga
   public cancel(): void {
     this.dialogRef.close();
+  }
+
+  private parseDate(value: string):Date{
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  private formatDate(date: Date | null):string{
+    if (!date) { return ''; }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

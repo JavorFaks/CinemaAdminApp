@@ -54,16 +54,9 @@
     <div class="form">
       <mat-form-field>
         <mat-label>Datum</mat-label>
-        <input
-          matInput
-          type="date"
-          placeholder="Datum"
-          name="datum"
-          [disabled]="flag == 3"
-          [(ngModel)]="data.datum"
-          required
-        />
-        
+        <input matInput [matDatepicker]="datumPicker" name="datum" [disabled]="flag == 3" [(ngModel)]="datumValue" required />
+        <mat-datepicker-toggle matSuffix [for]="datumPicker" [disabled]="flag == 3"></mat-datepicker-toggle>
+        <mat-datepicker #datumPicker></mat-datepicker>
       </mat-form-field>
     </div>
 

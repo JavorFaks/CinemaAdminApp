@@ -125,12 +125,16 @@
 
       <mat-form-field>
         <mat-label>Datum od</mat-label>
-        <input matInput type="date" [(ngModel)]="filterDatumOd" />
+        <input matInput [matDatepicker]="datumOdPicker" [(ngModel)]="filterDatumOdValue" />
+        <mat-datepicker-toggle matSuffix [for]="datumOdPicker"></mat-datepicker-toggle>
+        <mat-datepicker #datumOdPicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Datum do</mat-label>
-        <input matInput type="date" [(ngModel)]="filterDatumDo" />
+        <input matInput [matDatepicker]="datumDoPicker" [(ngModel)]="filterDatumDoValue" />
+        <mat-datepicker-toggle matSuffix [for]="datumDoPicker"></mat-datepicker-toggle>
+        <mat-datepicker #datumDoPicker></mat-datepicker>
       </mat-form-field>
 
       <div class="filter-actions">
