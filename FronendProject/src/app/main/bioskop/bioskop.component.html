@@ -13,10 +13,16 @@
 
   <div class="search-bar">
     <mat-icon>search</mat-icon>
-    <input type="text" placeholder="Pretrazi bioskope...">
+    <input
+      type="text"
+      placeholder="Pretrazi bioskope po nazivu..."
+      [(ngModel)]="filterNaziv"
+      (ngModelChange)="onNazivChange($event)"
+    >
   </div>
 
   <div class="page-layout">
+
     <section class="table-panel">
       <table mat-table matSort (matSortChange)="onSortChange($event)" [dataSource]="dataSource">
 
@@ -36,15 +42,15 @@
         </ng-container>
 
         <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let row">
-                <button mat-icon-button (click)="openDialog(2, row.id, row.naziv, row.adresa)">
-                <mat-icon class="icon-edit" aria-label="Edit">edit</mat-icon>
-                </button>
-                <button mat-icon-button (click)="openDialog(3, row.id, row.naziv, row.adresa)">
-                    <mat-icon class="icon-delete" aria-label="Delete">delete</mat-icon>
-                </button>
-            </td>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button (click)="openDialog(2, row)">
+              <mat-icon class="icon-edit" aria-label="Edit">edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="openDialog(3, row)">
+              <mat-icon class="icon-delete" aria-label="Delete">delete</mat-icon>
+            </button>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -60,6 +66,20 @@
         (page)="onPageChange($event)">
       </mat-paginator>
     </section>
+
+    <aside class="filters-panel">
+      <h3>Filteri</h3>
+
+      <mat-form-field>
+        <mat-label>Adresa</mat-label>
+        <input matInput type="text" [(ngModel)]="filterAdresa" />
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button class="btn-apply" (click)="applyFilters()">Primijeni</button>
+        <button matButton (click)="resetFilters()">Resetuj</button>
+      </div>
+    </aside>
   </div>
 
 </div>

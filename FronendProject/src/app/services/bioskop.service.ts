@@ -27,6 +27,31 @@ export class BioskopService {
 
   }
 
+  //Napredna pretraga za bioskop
+  public naprednaPretraga(
+    naziv: string | null,
+    adresa: string | null,
+    page: number, 
+    size: number, 
+    sort?:string
+  ):Observable<PagedResponse<Bioskop>>{
+     let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    if (sort) {
+      params = params.set('sort', sort);
+    }
+    if (naziv !== null) {
+      params = params.set('naziv', naziv);
+    }
+    if (adresa !== null) {
+      params = params.set('adresa', adresa);
+    }
+    
+    return this.httpClient.get<PagedResponse<Bioskop>>(`${this.baseUrl}/pretraga`, { params })
+  }
+
   //Create a novi bioskop
   public createBioskop(bioskop: Bioskop): Observable<Bioskop> {
     return this.httpClient.post<Bioskop>(this.baseUrl, bioskop);
