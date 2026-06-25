@@ -115,8 +115,8 @@ export class BioskopComponent implements OnInit {
     this.loadData();
   }
 
-  public openDialog(flag: number, id?: number, naziv?: string, adresa?: string): void {
-    const ref = this.dialog.open(BioskopDialogComponent, { data: {id, naziv, adresa}});
+  public openDialog(flag: number, row?: Bioskop): void {
+    const ref = this.dialog.open(BioskopDialogComponent, { data: row ? { ...row } : {} });
 
     ref.componentInstance.flag = flag;
 

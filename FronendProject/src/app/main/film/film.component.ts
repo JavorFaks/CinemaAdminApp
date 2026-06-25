@@ -130,8 +130,8 @@ export class FilmComponent implements OnInit {
     this.loadData();
   }
 
-  public openDialog(flag: number, id?: number, naziv?: string, recenzija?: string, trajanje?: number, zanr?: string): void {
-    const ref = this.dialog.open(FilmDialogComponent, { data: {id, naziv, recenzija, trajanje, zanr}});
+  public openDialog(flag: number, row?: Film): void {
+    const ref = this.dialog.open(FilmDialogComponent, { data: row ? { ...row } : {} });
 
     ref.componentInstance.flag = flag;
 
