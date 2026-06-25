@@ -16,6 +16,7 @@
     <input
       type="text"
       placeholder="Pretrazi filmove po nazivu..."
+      maxlength="100"
       [(ngModel)]="filterNaziv"
       (ngModelChange)="onNazivChange($event)"
     >
@@ -93,11 +94,14 @@
 
       <mat-form-field>
         <mat-label>Maksimalno trajanje (min)</mat-label>
-        <input matInput type="number" min="0" [(ngModel)]="filterMaxMinuta" />
+        <input matInput type="number" min="0" max="9999" [(ngModel)]="filterMaxMinuta" #filterTrajanjeRef="ngModel"/>
+        @if(filterTrajanjeRef.invalid && filterTrajanjeRef.touched){
+           <mat-error>Trajanje mora biti pozitivan broj, manji od 9999</mat-error>
+        }
       </mat-form-field>
 
       <div class="filter-actions">
-        <button class="btn-apply" (click)="applyFilters()">Primijeni</button>
+        <button class="btn-apply"  [disabled]="filterTrajanjeRef.invalid" (click)="applyFilters()">Primijeni</button>
         <button matButton (click)="resetFilters()">Resetuj</button>
       </div>
     </aside>

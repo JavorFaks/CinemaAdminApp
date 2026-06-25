@@ -71,6 +71,15 @@ export class RezervacijaComponent implements OnChanges, OnInit{
       : ['id', 'datum', 'brojOsoba', 'cenaKarte', 'placeno', 'film', 'sala', 'actions'];
   }
 
+  //Validacija unosa datuma
+  public get datumRangeInvalid(): boolean {
+    if(!this.filterDatumOdValue || !this.filterDatumDoValue){
+      return false;
+    }
+
+    return this.filterDatumOdValue.getTime() > this.filterDatumDoValue.getTime();
+  }
+
   ngOnInit(): void {
     this.filmService.getAll(0, 100).subscribe({
       next: (response) => this.filmovi.set(response.content),
@@ -178,4 +187,6 @@ export class RezervacijaComponent implements OnChanges, OnInit{
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+
+
  }

@@ -17,3 +17,9 @@
   font-weight: 600;
   color: var(--color-text-primary);
 }
+
+.filter-error {
+  color: #DC2626;
+  font-size: 12px;
+  margin: -4px 0 4px;
+}

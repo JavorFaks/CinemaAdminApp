@@ -125,20 +125,24 @@
 
       <mat-form-field>
         <mat-label>Datum od</mat-label>
-        <input matInput [matDatepicker]="datumOdPicker" [(ngModel)]="filterDatumOdValue" />
+        <input matInput [matDatepicker]="datumOdPicker" [(ngModel)]="filterDatumOdValue" readonly/>
         <mat-datepicker-toggle matSuffix [for]="datumOdPicker"></mat-datepicker-toggle>
         <mat-datepicker #datumOdPicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Datum do</mat-label>
-        <input matInput [matDatepicker]="datumDoPicker" [(ngModel)]="filterDatumDoValue" />
+        <input matInput [matDatepicker]="datumDoPicker" [(ngModel)]="filterDatumDoValue" readonly/>
         <mat-datepicker-toggle matSuffix [for]="datumDoPicker"></mat-datepicker-toggle>
         <mat-datepicker #datumDoPicker></mat-datepicker>
       </mat-form-field>
 
+      @if(datumRangeInvalid){
+        <p class="filter-error">Datum "od" ne moze biti nakon datuma "do".</p>
+      }
+
       <div class="filter-actions">
-        <button class="btn-apply" (click)="applyFilters()">Primijeni</button>
+        <button class="btn-apply" [disabled]="datumRangeInvalid" (click)="applyFilters()">Primijeni</button>
         <button matButton (click)="resetFilters()">Resetuj</button>
       </div>
     </aside>

@@ -77,16 +77,22 @@
 
     <mat-form-field>
       <mat-label>Minimalni kapacitet</mat-label>
-      <input matInput type="number" min="0" [(ngModel)]="filterKapacitet" />
+      <input matInput type="number" min="0" max="999999" [(ngModel)]="filterKapacitet" #filterKapacitetRef="ngModel"/>
+      @if(filterKapacitetRef.invalid && filterKapacitetRef.touched){
+           <mat-error>Kapacitet mora biti pozitivan i manji od 99999</mat-error>  
+        }
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Minimalni broj redova</mat-label>
-      <input matInput type="number" min="0" [(ngModel)]="filterBrojRedova" />
+      <input matInput type="number" min="0" max="99999" [(ngModel)]="filterBrojRedova" #filterBrojRedovaRef="ngModel"/>
+      @if(filterBrojRedovaRef.invalid && filterBrojRedovaRef.touched){
+           <mat-error>Broj redova mora biti pozitivan i manji od 99999</mat-error>  
+        }
     </mat-form-field>
 
     <div class="filter-actions">
-      <button class="btn-apply" (click)="applyFilters()">Primijeni</button>
+      <button class="btn-apply" [disabled]="filterKapacitetRef.invalid || filterBrojRedovaRef.invalid" (click)="applyFilters()">Primijeni</button>
       <button matButton (click)="resetFilters()">Resetuj</button>
     </div>
   </aside>

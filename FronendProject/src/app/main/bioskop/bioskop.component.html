@@ -16,6 +16,7 @@
     <input
       type="text"
       placeholder="Pretrazi bioskope po nazivu..."
+      maxlength="100"
       [(ngModel)]="filterNaziv"
       (ngModelChange)="onNazivChange($event)"
     >
@@ -73,7 +74,7 @@
 
       <mat-form-field>
         <mat-label>Adresa</mat-label>
-        <input matInput type="text" [(ngModel)]="filterAdresa" />
+        <input matInput type="text" [(ngModel)]="filterAdresa" maxlength="100"/>
       </mat-form-field>
 
       <div class="filter-actions">
