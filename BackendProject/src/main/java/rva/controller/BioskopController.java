@@ -52,6 +52,16 @@ public class BioskopController {
 
 	}
 	
+	@GetMapping("/bioskop/pretraga")
+	public ResponseEntity<Page<Bioskop>> naprednaPretraga(
+	        @RequestParam(required = false) String naziv,
+	        @RequestParam(required = false) String adresa,
+	        Pageable pageable
+	) {
+		Page<Bioskop> bioskopi = service.naprednaPretraga(naziv, adresa, pageable);
+	    
+	    return ResponseEntity.ok(bioskopi);
+	}
 	
 	@PostMapping("/bioskop")
 	public ResponseEntity<?> createBioskop(@Valid @RequestBody Bioskop bioskop){

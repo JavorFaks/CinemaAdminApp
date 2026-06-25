@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -74,6 +75,35 @@ public class BioskopServiceImpl implements BioskopService {
 		if(bioskopi.isEmpty()) {
 			throw new EntityNotFoundException("Bioskop iz ovog grada ne postoje.");
 		}
+		
+		return bioskopi;
+	}
+	
+	@Override
+	public Page<Bioskop> naprednaPretraga(String naziv, String adresa, Pageable page)
+	{
+		Specification<Bioskop> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction(); //Prazno
+		
+		
+		//Filter po nazivu
+		if (naziv != null && !naziv.trim().isEmpty()) {
+			//dodaje se and uslov
+			//root tabela
+            spec = spec.and((root, query, criteriaBuilder) -> 
+                criteriaBuilder.like(criteriaBuilder.lower(root.get("naziv")), "%" + naziv.toLowerCase() + "%") //uporedi dva naziv iz tabele i uneseni
+            );
+        }
+		
+		//Dodaje se filter po adresi
+		if(adresa != null && !adresa.trim().isEmpty()) {
+			spec = spec.and((root, query, criteriaBuilder) ->
+				criteriaBuilder.like(criteriaBuilder.lower(root.get("adresa")), "%" + adresa.toLowerCase() + "%")
+			);
+		}
+		
+		
+		Page<Bioskop> bioskopi = repo.findAll(spec, page);
+		
 		
 		return bioskopi;
 	}

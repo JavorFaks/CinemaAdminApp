@@ -10,4 +10,6 @@ import rva.model.Bioskop;
 @Service
 public interface BioskopService extends CrudService<Bioskop> {
 	Page<Bioskop> getBioskopPoGradu(String grad, Pageable page);
+	
+	Page<Bioskop> naprednaPretraga(String naziv, String adresa, Pageable page);
 }
