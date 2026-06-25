@@ -79,7 +79,7 @@ export class SalaComponent implements OnInit {
   }
 
   public openDialog(flag: number, row?: Sala): void {
-    const ref = this.dialog.open(SalaDialogComponent, { data: row });
+    const ref = this.dialog.open(SalaDialogComponent, { data: row ? { ...row } : {} });
 
     ref.componentInstance.flag = flag;
 
