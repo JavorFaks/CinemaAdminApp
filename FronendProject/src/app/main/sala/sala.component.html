@@ -11,12 +11,8 @@
     </button>
   </div>
 
-  <div class="search-bar">
-    <mat-icon>search</mat-icon>
-    <input type="text" placeholder="Pretrazi sale...">
-  </div>
-
   <div class="page-layout">
+
     <section class="table-panel">
       <table mat-table matSort (matSortChange)="onSortChange($event)" [dataSource]="dataSource">
 
@@ -65,6 +61,35 @@
         (page)="onPageChange($event)">
       </mat-paginator>
     </section>
+
+    <aside class="filters-panel">
+    <h3>Filteri</h3>
+
+    <mat-form-field>
+      <mat-label>Bioskop</mat-label>
+      <mat-select [(ngModel)]="filterBioskopId">
+        <mat-option [value]="null">Svi bioskopi</mat-option>
+        @for (bioskop of bioskopi(); track bioskop.id) {
+          <mat-option [value]="bioskop.id">{{ bioskop.naziv }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Minimalni kapacitet</mat-label>
+      <input matInput type="number" min="0" [(ngModel)]="filterKapacitet" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Minimalni broj redova</mat-label>
+      <input matInput type="number" min="0" [(ngModel)]="filterBrojRedova" />
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button class="btn-apply" (click)="applyFilters()">Primijeni</button>
+      <button matButton (click)="resetFilters()">Resetuj</button>
+    </div>
+  </aside>
   </div>
     @if (parentSelectedSala) {
       <app-rezervacija [childSelectedSala]="parentSelectedSala"></app-rezervacija>

@@ -27,6 +27,35 @@ export class SalaService {
 
   }
 
+  
+  public naprednaPretraga(
+      kapacitet: number | null,
+      brojRedova: number | null,
+      bioskopId: number | null,
+      page: number,
+      size: number,
+      sort?: string
+  ):Observable<PagedResponse<Sala>>{
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+    
+    if (sort) {
+      params = params.set('sort', sort);
+    }
+    if (kapacitet !== null) {
+      params = params.set('kapacitet', kapacitet);
+    }
+    if (brojRedova !== null) {
+      params = params.set('brojRedova', brojRedova);
+    }
+    if (bioskopId !== null) {
+      params = params.set('bioskopId', bioskopId);
+    } 
+
+    return this.httpClient.get<PagedResponse<Sala>>(`${this.baseUrl}/pretraga`, { params });
+ }
+
   //Create a novi sala
   public createSala(sala: Sala): Observable<Sala> {
     return this.httpClient.post<Sala>(this.baseUrl, sala);

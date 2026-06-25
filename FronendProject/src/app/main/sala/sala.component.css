@@ -119,3 +119,50 @@ button[mat-icon-button]:hover .icon-edit {
 button[mat-icon-button]:hover .icon-delete {
   color: #DC2626;
 }
+
+.filters-panel {
+  width: 280px;
+  flex-shrink: 0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-self: flex-start;
+}
+
+.filters-panel h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.filters-panel mat-form-field {
+  width: 100%;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-apply {
+  background-color: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-apply:hover {
+  background-color: var(--color-accent-hover);
+}
