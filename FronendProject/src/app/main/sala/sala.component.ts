@@ -40,7 +40,7 @@ export class SalaComponent implements OnInit {
   sortField = '';
   sortDirection = '';
 
-  parentSelectedSala!: Sala; // Selected sala za dijete
+  parentSelectedSala?: Sala; // Selected sala za dijete
 
   filterKapacitet: number | null = null;
   filterBrojRedova: number | null = null;
@@ -94,6 +94,7 @@ export class SalaComponent implements OnInit {
     if(this.paginator){
       this.paginator.pageIndex = 0;
     }
+    this.closeRezervacije();
     this.loadData();
   }
 
@@ -109,6 +110,7 @@ export class SalaComponent implements OnInit {
   public onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
+    this.closeRezervacije();
     this.loadData();
   }
 
@@ -117,7 +119,7 @@ export class SalaComponent implements OnInit {
     this.sortField = sort.direction ? sort.active : '';
     this.sortDirection = sort.direction;
     this.pageIndex = 0;  // Reset na prvu stranicu kada se promeni sortiranje
-
+    this.closeRezervacije();
     if(this.paginator){
       this.paginator.pageIndex = 0;
     }
@@ -132,6 +134,10 @@ export class SalaComponent implements OnInit {
 
     ref.afterClosed().subscribe((response) =>{
       if(response){ //ako je response 1 (add, update, delete) onda reload data
+        if (flag === 3 && this.parentSelectedSala?.id === row?.id) {
+          this.closeRezervacije();
+        }
+        
         this.loadData();
       }
     });
@@ -141,4 +147,8 @@ export class SalaComponent implements OnInit {
     this.parentSelectedSala = row;
   }
 
+
+  public closeRezervacije(): void {
+    this.parentSelectedSala = undefined;
+  }
  }

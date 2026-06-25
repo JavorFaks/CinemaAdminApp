@@ -98,6 +98,6 @@
   </aside>
   </div>
     @if (parentSelectedSala) {
-      <app-rezervacija [childSelectedSala]="parentSelectedSala"></app-rezervacija>
+      <app-rezervacija [childSelectedSala]="parentSelectedSala" (closed)="closeRezervacije()"></app-rezervacija>
     }
 </div>

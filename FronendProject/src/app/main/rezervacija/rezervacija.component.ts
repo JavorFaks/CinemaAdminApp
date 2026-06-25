@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChange, ViewChild, signal,SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, Output, EventEmitter, ViewChild, signal,SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,7 +32,7 @@ import { SalaService } from '../../services/sala.service';
 })
 export class RezervacijaComponent implements OnChanges, OnInit{
   @Input() childSelectedSala?: Sala; //Dobijanje sale iz roditelj komponente
-
+  @Output() closed = new EventEmitter<void>();
   
   dataSource = new MatTableDataSource<Rezervacija>();
 
