@@ -67,11 +67,22 @@
       </mat-form-field>
     </div>
 
+    @if (showSalaSelect) {
+      <mat-form-field>
+        <mat-label>Sala</mat-label>
+        <mat-select [compareWith]="compare" name="sala" [disabled]="flag == 3" [(ngModel)]="data.sala" required>
+          @for (sala of sale(); track sala.id) {
+            <mat-option [value]="sala">Sala #{{ sala.id }} ({{ sala.bioskop?.naziv }})</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
     <div class="form">
       <mat-form-field>
       <mat-label>Film</mat-label>
       <mat-select [compareWith]="compare" name="film" [disabled]="flag == 3" [(ngModel)]="data.film" required>
-        @for (film of filmovi; track film.id) {
+        @for (film of filmovi(); track film.id) {
           <mat-option [value]="film">{{ film.naziv }}</mat-option>
         }
       </mat-select>

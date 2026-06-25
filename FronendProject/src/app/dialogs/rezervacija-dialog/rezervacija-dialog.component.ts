@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, signal } from '@angular/core';
 
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,6 +15,8 @@ import { Film } from '../../models/film';
 import { FilmService } from '../../services/film.service';
 import { RezervacijaService } from '../../services/rezervacija.service';
 import { Rezervacija } from '../../models/rezervacija';
+import { SalaService } from '../../services/sala.service';
+import { Sala } from '../../models/sala';
 
 
 @Component({
@@ -25,13 +27,17 @@ import { Rezervacija } from '../../models/rezervacija';
   styleUrl: './rezervacija-dialog.component.css',
 })
 export class RezervacijaDialogComponent implements OnInit {
+  showSalaSelect = false;
 
   flag!: number;
-  filmovi: Film[] = [];
-  
+  filmovi = signal<Film[]>([]);
+  sale = signal<Sala[]>([]);
+
+
   constructor(  
     private service: RezervacijaService,
     private filmService: FilmService,
+    private salaService: SalaService,
     private snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<RezervacijaDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Rezervacija
@@ -39,16 +45,26 @@ export class RezervacijaDialogComponent implements OnInit {
 
   //Ocitavanje stranih kljuceva filma
   ngOnInit(): void {
+    this.showSalaSelect = !this.data.sala;
+
     this.filmService.getAll(0, 100).subscribe({
-      next: (response) => { this.filmovi = response.content; },
+      next: (response) => this.filmovi.set(response.content),
       error: (err) => {
         console.log(err);
         this.snackBar.open('Došlo je do greške prilikom učitavanja filmova.', 'OK', { duration: 2500 });
       }
     });
+
+    this.salaService.getAll(0, 100).subscribe({
+    next: (response) => this.sale.set(response.content),
+    error: (err) => {
+      console.log(err)
+      this.snackBar.open('Došlo je do greške prilikom učitavanja filmova.', 'OK', { duration: 2500 });
+    }
+  });
   }
 
-  public compare(a: Film, b: Film): boolean {
+  public compare(a: any, b: any): boolean {
     return a?.id === b?.id;
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChange, ViewChild, signal,SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,17 +11,28 @@ import { Rezervacija } from '../../models/rezervacija';
 import { RezervacijaService } from '../../services/rezervacija.service';
 import { RezervacijaDialogComponent } from '../../dialogs/rezervacija-dialog/rezervacija-dialog.component';
 
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+
+import { Film } from '../../models/film';
+import { FilmService } from '../../services/film.service';
+import { SalaService } from '../../services/sala.service';
 @Component({
   selector: 'app-rezervacija',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatSortModule, MatPaginatorModule],
+  imports: [
+    CommonModule, FormsModule, MatTableModule, MatIconModule, MatButtonModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule, MatSortModule, MatPaginatorModule
+  ],
   templateUrl: './rezervacija.component.html',
   styleUrl: './rezervacija.component.css',
 })
-export class RezervacijaComponent implements OnChanges{
-  @Input() childSelectedSala!: Sala; //Dobijanje sale iz roditelj komponente
+export class RezervacijaComponent implements OnChanges, OnInit{
+  @Input() childSelectedSala?: Sala; //Dobijanje sale iz roditelj komponente
 
-  displayedColumns = ['id', 'brojOsoba', 'cenaKarte', 'datum', 'placeno', 'film', 'actions'];
+  
   dataSource = new MatTableDataSource<Rezervacija>();
 
   totalElements = 0;
@@ -30,45 +41,93 @@ export class RezervacijaComponent implements OnChanges{
   sortField = '';
   sortDirection = '';
 
+  filterFilmId: number | null = null;
+  filterSalaId: number | null = null;
+  filterPlaceno: boolean | null = null;
+  filterDatumOd = '';
+  filterDatumDo = '';
+
+  filmovi = signal<Film[]>([]);
+  sale = signal<Sala[]>([]);
+
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private service: RezervacijaService, private dialog: MatDialog) {}
+  constructor(
+    private service: RezervacijaService, 
+    private filmService: FilmService,
+    private salaService: SalaService,
+    private dialog: MatDialog
+  ) {}
 
-  ngOnChanges() {
-    this.pageIndex = 0;
-    this.loadData();
+  public get isNested(): boolean {
+    return !!this.childSelectedSala;
+  }
+
+  public get displayedColumns(): string[] {
+    return this.isNested
+      ? ['id', 'datum', 'brojOsoba', 'cenaKarte', 'placeno', 'film', 'actions']
+      : ['id', 'datum', 'brojOsoba', 'cenaKarte', 'placeno', 'film', 'sala', 'actions'];
+  }
+
+  ngOnInit(): void {
+    this.filmService.getAll(0, 100).subscribe({
+      next: (response) => this.filmovi.set(response.content),
+      error: (err) => console.log(err)
+    });
+
+    if (!this.isNested) {
+      this.salaService.getAll(0, 100).subscribe({
+        next: (response) => this.sale.set(response.content),
+        error: (err) => console.log(err)
+      });
+      this.loadData();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['childSelectedSala']) {
+      this.pageIndex = 0;
+      this.loadData();
+    }
   }
 
 
   // Load data for service
   public loadData(){
     const sort = this.sortField ? `${this.sortField},${this.sortDirection}` : undefined;
+    const salaId = this.isNested ? this.childSelectedSala!.id : this.filterSalaId;
 
-    /*
-    this.service.getAll(this.pageIndex, this.pageSize, sort).subscribe({
-      next: (response) => {
+    this.service.naprednaPretraga(
+      this.filterFilmId,
+      salaId,
+      this.filterPlaceno,
+      this.filterDatumOd || null,
+      this.filterDatumDo || null,
+      this.pageIndex,
+      this.pageSize,
+      sort
+    ).subscribe({
+      next: (response) =>{
         this.dataSource.data = response.content;
         this.totalElements = response.totalElements;
       },
       error: (err) => console.log(err)
-    });
-    */
+    })
+  }
 
-    this.service.getRezervacijaBySala(this.childSelectedSala.id, this.pageIndex, this.pageSize, sort).subscribe({
-      next: (response) => {
-        this.dataSource.data = response.content;
-        this.totalElements = response.totalElements;
-      },
-      error: (err) => {
-        if(err.status === 404){
-          this.dataSource.data = [];
-          this.totalElements = 0;
-        } else {
-          console.log(err);
-        }
-      }
-    });
+  public applyFilters(): void {
+    this.pageIndex = 0;
+    this.loadData();
+  }
+
+  public resetFilters(): void {
+    this.filterFilmId = null;
+    this.filterSalaId = null;
+    this.filterPlaceno = null;
+    this.filterDatumOd = '';
+    this.filterDatumDo = '';
+    this.applyFilters();
   }
 
   // Handle page change event
@@ -95,7 +154,11 @@ export class RezervacijaComponent implements OnChanges{
     const ref = this.dialog.open(RezervacijaDialogComponent, { data: row ? { ...row } : {} });
 
     ref.componentInstance.flag = flag;
-    ref.componentInstance.data.sala = this.childSelectedSala;
+
+    if(this.isNested){
+      ref.componentInstance.data.sala = this.childSelectedSala!;
+    }
+    
 
     ref.afterClosed().subscribe((response) =>{
       if(response){ //ako je response 1 (add, update, delete) onda reload data

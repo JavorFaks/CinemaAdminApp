@@ -27,6 +27,34 @@ export class RezervacijaService {
 
   }
 
+  public naprednaPretraga(
+    filmId: number | null,
+    salaId: number | null,
+    placeno: boolean | null,
+    datumOd: string | null,
+    datumDo: string | null,
+    page: number,
+    size: number,
+    sort?: string
+  ):Observable<PagedResponse<Rezervacija>>{
+    let params = new HttpParams()
+      .set('page',page)
+      .set('size',size);
+
+    if(sort){
+      params = params.set('sort', sort);
+    }
+
+    if(filmId!=null){ params = params.set('filmId', filmId); } 
+    if(salaId!=null){ params = params.set('salaId', salaId); } 
+    if(placeno!=null){ params = params.set('placeno', placeno); } 
+    if (datumOd) { params = params.set('datumOd', datumOd); }
+    if (datumDo) { params = params.set('datumDo', datumDo); }
+
+    return this.httpClient.get<PagedResponse<Rezervacija>>(`${this.baseUrl}/pretraga`, { params });
+  }
+
+
   public getRezervacijaBySala(salaId: number, page: number, size: number, sort?:string):Observable<PagedResponse<Rezervacija>> {
     let params = new HttpParams()
       .set('salaId', salaId)
