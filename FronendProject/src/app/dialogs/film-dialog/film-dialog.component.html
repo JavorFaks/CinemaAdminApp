@@ -16,6 +16,7 @@
           matInput
           placeholder="Naziv"
           name="naziv"
+          maxlength="100"
           [disabled]="flag == 3"
           [(ngModel)]="data.naziv"
           required
@@ -28,12 +29,19 @@
         <mat-label>Recenzija</mat-label>
         <input
           matInput
+          type="number"
           placeholder="Recenzija"
           name="recenzija"
+          min="1"
+          max="10"
           [disabled]="flag == 3"
           [(ngModel)]="data.recenzija"
+          #recenzijaRef = "ngModel"
           required
         />
+        @if(recenzijaRef.invalid && recenzijaRef.touched ){
+          <mat-error>Recenzija mora biti broj od 1 do 10</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -42,12 +50,19 @@
         <mat-label>Trajanje</mat-label>
         <input
           matInput
+          type="number"
           placeholder="Trajanje"
           name="trajanje"
+          min="1"
+          max="9999"
           [disabled]="flag == 3"
           [(ngModel)]="data.trajanje"
+          #trajanjeRef="ngModel"
           required
         />
+        @if(trajanjeRef.invalid && trajanjeRef.touched ){
+          <mat-error>Trajanje mora biti pozitivan broj manji od 9999</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -58,6 +73,7 @@
           matInput
           placeholder="Zanr"
           name="zanr"
+          maxlength="100"
           [disabled]="flag == 3"
           [(ngModel)]="data.zanr"
           required

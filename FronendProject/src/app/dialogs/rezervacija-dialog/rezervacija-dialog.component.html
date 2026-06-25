@@ -17,10 +17,16 @@
           type="number"
           placeholder="Broj osoba"
           name="brojOsoba"
+          min="1"
+          max="99999"
           [disabled]="flag == 3"
           [(ngModel)]="data.brojOsoba"
+          #brojOsoba = "ngModel"
           required
         />
+        @if(brojOsoba.invalid && brojOsoba.touched){
+          <mat-error>Broj osoba mora biti pozitivan i manji od 99999</mat-error>
+        }
       </mat-form-field>
     </div>
     
@@ -32,10 +38,16 @@
           type="number"
           placeholder="Cena Karte"
           name="cenaKarte"
+          min="0"
+          max="999999"
           [disabled]="flag == 3"
           [(ngModel)]="data.cenaKarte"
+          #cenaKarte = "ngModel"
           required
         />
+        @if(cenaKarte.invalid && cenaKarte.touched){
+          <mat-error>Cena ne moze biti negativna niti veca od 999999</mat-error>
+        }
       </mat-form-field>
     </div>
 

@@ -14,12 +14,19 @@
         <mat-label>Kapacitet</mat-label>
         <input
           matInput
+          type="number"
           placeholder="Kapacitet"
           name="kapacitet"
+          min="1"
+          max="999999"
           [disabled]="flag == 3"
           [(ngModel)]="data.kapacitet"
+          #kapacitetRef = "ngModel"
           required
         />
+        @if(kapacitetRef.invalid && kapacitetRef.touched){
+           <mat-error>Kapacitet mora biti pozitivan i manji od 99999</mat-error>
+        }
       </mat-form-field>
     </div>
     
@@ -28,12 +35,19 @@
         <mat-label>Broj Redova</mat-label>
         <input
           matInput
+          type="number"
           placeholder="Broj Redova"
           name="brojRedova"
+          min="1"
+          max="999999"
           [disabled]="flag == 3"
           [(ngModel)]="data.brojRedova"
+          #brojRedovaRef = "ngModel"
           required
         />
+        @if(brojRedovaRef.invalid && brojRedovaRef.touched){
+           <mat-error>Broj redova mora biti pozitivan i manji od 99999</mat-error>  
+        }
       </mat-form-field>
     </div>
 
