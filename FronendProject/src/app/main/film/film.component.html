@@ -13,10 +13,16 @@
 
   <div class="search-bar">
     <mat-icon>search</mat-icon>
-    <input type="text" placeholder="Pretrazi filmove...">
+    <input
+      type="text"
+      placeholder="Pretrazi filmove po nazivu..."
+      [(ngModel)]="filterNaziv"
+      (ngModelChange)="onNazivChange($event)"
+    >
   </div>
 
   <div class="page-layout">
+
     <section class="table-panel">
       <table mat-table matSort (matSortChange)="onSortChange($event)" [dataSource]="dataSource">
 
@@ -30,31 +36,31 @@
           <td mat-cell *matCellDef="let row">{{ row.naziv }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="recenzija">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Recenzija</th>
-          <td mat-cell *matCellDef="let row">{{ row.recenzija }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="trajanje">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Trajanje</th>
-          <td mat-cell *matCellDef="let row">{{ row.trajanje }}</td>
-        </ng-container>
-
         <ng-container matColumnDef="zanr">
           <th mat-header-cell mat-sort-header *matHeaderCellDef>Zanr</th>
           <td mat-cell *matCellDef="let row">{{ row.zanr }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="trajanje">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Trajanje</th>
+          <td mat-cell *matCellDef="let row">{{ row.trajanje }} min</td>
+        </ng-container>
+
+        <ng-container matColumnDef="recenzija">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Recenzija</th>
+          <td mat-cell *matCellDef="let row">{{ row.recenzija }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let row">
-                <button mat-icon-button (click)="openDialog(2, row.id, row.naziv, row.recenzija, row.trajanje, row.zanr)">
-                <mat-icon class="icon-edit" aria-label="Edit">edit</mat-icon>
-                </button>
-                <button mat-icon-button (click)="openDialog(3, row.id, row.naziv, row.recenzija, row.trajanje, row.zanr)">
-                    <mat-icon class="icon-delete" aria-label="Delete">delete</mat-icon>
-                </button>
-            </td>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button (click)="openDialog(2, row)">
+              <mat-icon class="icon-edit" aria-label="Edit">edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="openDialog(3, row)">
+              <mat-icon class="icon-delete" aria-label="Delete">delete</mat-icon>
+            </button>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -70,6 +76,30 @@
         (page)="onPageChange($event)">
       </mat-paginator>
     </section>
+
+    <aside class="filters-panel">
+      <h3>Filteri</h3>
+
+      <mat-form-field>
+        <mat-label>Zanr</mat-label>
+        <mat-select [(ngModel)]="filterZanr">
+          <mat-option [value]="null">Svi zanrovi</mat-option>
+          @for (zanr of zanrovi(); track zanr) {
+            <mat-option [value]="zanr">{{ zanr }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Maksimalno trajanje (min)</mat-label>
+        <input matInput type="number" min="0" [(ngModel)]="filterMaxMinuta" />
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button class="btn-apply" (click)="applyFilters()">Primijeni</button>
+        <button matButton (click)="resetFilters()">Resetuj</button>
+      </div>
+    </aside>
   </div>
 
 </div>
