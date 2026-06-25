@@ -211,3 +211,54 @@ button[mat-icon-button]:hover .icon-delete {
   gap: 8px;
   margin-top: 8px;
 }
+
+/* ===== Dialog (zajednicki za sve add/edit/delete dijaloge) ===== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+  margin: 0 auto;
+  align-items: center;
+  padding: 32px 16px 32px 16px;
+  gap: 16px;
+}
+
+.container form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.container h3 {
+  text-align: center;
+}
+
+.container mat-form-field {
+  width: 100%;
+  font-size: 16px;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  width: 90%;
+  justify-content: center;
+  gap: 12px;
+}
+
+.mat-dialog-actions button[matButton] {
+  padding: 12px;
+  font-size: 16px;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+}
+
+.mat-dialog-actions button:first-child {
+  background-color: rgb(72, 235, 72);
+}
+
+.mat-dialog-actions button:last-child {
+  background-color: rgb(217, 87, 87);
+}
