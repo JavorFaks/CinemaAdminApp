@@ -36,7 +36,7 @@ input[type="number"] {
 /* ===== Layout stranice (table-based stranice: Bioskop, Sala, Film) ===== */
 
 .page-container {
-  max-width: 1100px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 48px 24px;
 }
@@ -142,6 +142,7 @@ input[type="number"] {
   border: 1px solid var(--color-border);
   border-radius: 14px;
   overflow: hidden;
+  align-self: flex-start;
 }
 
 table {
@@ -149,13 +150,13 @@ table {
 }
 
 th[mat-header-cell] {
-  background-color: var(--color-surface);
-  color: var(--color-text-secondary);
-  font-weight: 600;
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary);
+  font-weight: 700;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  border-bottom: 1px solid var(--color-border) !important;
+  border-bottom: 2px solid var(--color-border) !important;
 }
 
 td[mat-cell] {
@@ -163,8 +164,18 @@ td[mat-cell] {
   color: var(--color-text-primary);
 }
 
+th[mat-header-cell],
+td[mat-cell] {
+  white-space: nowrap;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
 tr[mat-row]:hover {
-  background-color: var(--color-bg);
+  background-color: var(--color-accent-soft);
+  cursor: pointer;
 }
 
 .icon-edit,
