@@ -134,10 +134,6 @@ public class SalaServiceImpl implements SalaService {
 		
 		Page<Sala> sale = repo.findAll(spec, pageable);
 		
-		if(sale.isEmpty()) {
-			throw new EntityNotFoundException("Trenutno nema sala sa ovim kriterijumima");
-		}
-		
 		return sale;
 	}
 

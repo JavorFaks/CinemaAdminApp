@@ -197,9 +197,6 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 		
 		Page<Rezervacija> r = repo.findAll(spec, pageable);
 		
-		if(r.isEmpty()) {
-			throw new EntityNotFoundException("Nema rezervacija sa ovim kriterijumima.");
-		}
 		
 		return r;
 	}

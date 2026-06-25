@@ -102,10 +102,6 @@ public class FilmServiceImpl implements FilmService{
 		Page<Film> filmovi = repo.findAll(spec, pageable);
 		
 		
-		if(filmovi.isEmpty()) {
-			throw new EntityNotFoundException("Nema filmova koji ispunjavaju ove kriterijume.");
-		}
-		
 		return filmovi;
 	
 	}
