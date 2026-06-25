@@ -1,5 +1,6 @@
 package rva.implementation;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,11 @@ public class FilmServiceImpl implements FilmService{
 		
 		return filmovi;
 	
+	}
+	
+	@Override
+	public List<String> getDistinctZanrovi() {
+		return repo.findDistinctZanrovi();
 	}
 	
 
