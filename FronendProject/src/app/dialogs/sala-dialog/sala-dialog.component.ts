@@ -40,7 +40,7 @@ export class SalaDialogComponent implements OnInit {
         this.bioskopi = response.content;
       }, error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom učitavanja bioskopa.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while loading cinemas.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -53,11 +53,11 @@ export class SalaDialogComponent implements OnInit {
     this.service.createSala(this.data).subscribe({
       next: () => {
         this.dialogRef.close(1);
-        this.snackBar.open('Sala je uspešno dodata!', 'OK', { duration: 2500 });
+        this.snackBar.open('Hall added successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom dodavanja sale.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while adding the hall.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -67,11 +67,11 @@ export class SalaDialogComponent implements OnInit {
     this.service.updateSala(this.data).subscribe({
       next: () =>{
         this.dialogRef.close(1);
-        this.snackBar.open('Sala je uspešno izmenjena!', 'OK', { duration: 2500 });
+        this.snackBar.open('Hall updated successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom izmene sale.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while updating the hall.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -81,11 +81,11 @@ export class SalaDialogComponent implements OnInit {
     this.service.deleteSala(this.data.id).subscribe({
       next: () =>{
         this.dialogRef.close(1);
-        this.snackBar.open('Sala je uspešno obrisana!', 'OK', { duration: 2500 });
+        this.snackBar.open('Hall deleted successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom brisanja sale.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while deleting the hall.', 'OK', { duration: 2500 });
       }
     });
   }

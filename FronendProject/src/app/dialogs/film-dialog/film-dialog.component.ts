@@ -35,11 +35,11 @@ export class FilmDialogComponent {
     this.service.createFilm(this.data).subscribe({
       next: () => {
         this.dialogRef.close(1);
-        this.snackBar.open('Film je uspešno dodat!', 'OK', { duration: 2500 });
+        this.snackBar.open('Movie added successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom dodavanja filma.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while adding the movie.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -49,11 +49,11 @@ export class FilmDialogComponent {
     this.service.updateFilm(this.data).subscribe({
       next: () =>{
         this.dialogRef.close(1);
-        this.snackBar.open('Film je uspešno izmenjen!', 'OK', { duration: 2500 });
+        this.snackBar.open('Movie updated successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom izmene filma.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while updating the movie.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -63,11 +63,11 @@ export class FilmDialogComponent {
     this.service.deleteFilm(this.data.id).subscribe({
       next: () =>{
         this.dialogRef.close(1);
-        this.snackBar.open('Film je uspešno obrisan!', 'OK', { duration: 2500 });
+        this.snackBar.open('Movie deleted successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom brisanja filma.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while deleting the movie.', 'OK', { duration: 2500 });
       }
     });
   }

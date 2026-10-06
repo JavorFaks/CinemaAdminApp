@@ -1,20 +1,20 @@
 <div class="container">
   @if (flag === 1) {
-    <h3 mat-dialog-title>Dodavanje filma</h3>
+    <h3 mat-dialog-title>Add movie</h3>
   } @else if (flag === 2) {
-    <h3 mat-dialog-title>Izmjena filma: {{ data.naziv }}</h3>
+    <h3 mat-dialog-title>Edit movie: {{ data.naziv }}</h3>
   } @else if (flag === 3) {
-    <h3 mat-dialog-title>Brisanje filma: {{ data.naziv }}</h3>
+    <h3 mat-dialog-title>Delete movie: {{ data.naziv }}</h3>
   }
 
   <form class="mat-dialog-content" #formControl="ngForm">
     <div class="form">
       
       <mat-form-field>
-        <mat-label>Naziv</mat-label>
+        <mat-label>Title</mat-label>
         <input
           matInput
-          placeholder="Naziv"
+          placeholder="Title"
           name="naziv"
           maxlength="100"
           [disabled]="flag == 3"
@@ -26,11 +26,11 @@
     
   <div class="form">
       <mat-form-field>
-        <mat-label>Recenzija</mat-label>
+        <mat-label>Rating</mat-label>
         <input
           matInput
           type="number"
-          placeholder="Recenzija"
+          placeholder="Rating"
           name="recenzija"
           min="1"
           max="10"
@@ -40,18 +40,18 @@
           required
         />
         @if(recenzijaRef.invalid && recenzijaRef.touched ){
-          <mat-error>Recenzija mora biti broj od 1 do 10</mat-error>
+          <mat-error>Rating must be between 1 and 10</mat-error>
         }
       </mat-form-field>
     </div>
 
     <div class="form">
       <mat-form-field>
-        <mat-label>Trajanje</mat-label>
+        <mat-label>Duration</mat-label>
         <input
           matInput
           type="number"
-          placeholder="Trajanje"
+          placeholder="Duration"
           name="trajanje"
           min="1"
           max="9999"
@@ -61,17 +61,17 @@
           required
         />
         @if(trajanjeRef.invalid && trajanjeRef.touched ){
-          <mat-error>Trajanje mora biti pozitivan broj manji od 9999</mat-error>
+          <mat-error>Duration must be between 1 and 9999</mat-error>
         }
       </mat-form-field>
     </div>
 
     <div class="form">
       <mat-form-field>
-        <mat-label>Zanr</mat-label>
+        <mat-label>Genre</mat-label>
         <input
           matInput
-          placeholder="Zanr"
+          placeholder="Genre"
           name="zanr"
           maxlength="100"
           [disabled]="flag == 3"

@@ -53,7 +53,7 @@ export class RezervacijaDialogComponent implements OnInit {
       next: (response) => this.filmovi.set(response.content),
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom učitavanja filmova.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while loading movies.', 'OK', { duration: 2500 });
       }
     });
 
@@ -61,7 +61,7 @@ export class RezervacijaDialogComponent implements OnInit {
     next: (response) => this.sale.set(response.content),
     error: (err) => {
       console.log(err)
-      this.snackBar.open('Došlo je do greške prilikom učitavanja sala.', 'OK', { duration: 2500 });
+      this.snackBar.open('An error occurred while loading halls.', 'OK', { duration: 2500 });
     }
   });
   }
@@ -76,11 +76,11 @@ export class RezervacijaDialogComponent implements OnInit {
     this.service.createRezervacija(this.data).subscribe({
       next: () => {
         this.dialogRef.close(1);
-        this.snackBar.open('Rezervacija je uspešno dodata!', 'OK', { duration: 2500 });
+        this.snackBar.open('Reservation added successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom dodavanja rezervacije.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while adding the reservation.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -91,11 +91,11 @@ export class RezervacijaDialogComponent implements OnInit {
     this.service.updateRezervacija(this.data).subscribe({
       next: () =>{
         this.dialogRef.close(1);
-        this.snackBar.open('Rezervacija je uspešno izmenjena!', 'OK', { duration: 2500 });
+        this.snackBar.open('Reservation updated successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom izmene rezervacije.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while updating the reservation.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -105,11 +105,11 @@ export class RezervacijaDialogComponent implements OnInit {
     this.service.deleteRezervacija(this.data.id).subscribe({
       next: () =>{
         this.dialogRef.close(1);
-        this.snackBar.open('Rezervacija je uspešno obrisana!', 'OK', { duration: 2500 });
+        this.snackBar.open('Reservation deleted successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom brisanja rezervacije.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while deleting the reservation.', 'OK', { duration: 2500 });
       }
     });
   }

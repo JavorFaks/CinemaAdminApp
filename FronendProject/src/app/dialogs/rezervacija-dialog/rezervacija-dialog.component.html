@@ -1,21 +1,21 @@
 <div class="container">
   @if (flag === 1) {
-    <h3 mat-dialog-title>Dodavanje rezervacije</h3>
+    <h3 mat-dialog-title>Add reservation</h3>
   } @else if (flag === 2) {
-    <h3 mat-dialog-title>Izmjena rezervacije: {{ data.id }}</h3>
+    <h3 mat-dialog-title>Edit reservation #{{ data.id }}</h3>
   } @else if (flag === 3) {
-    <h3 mat-dialog-title>Brisanje rezervacije: {{ data.id }}</h3>
+    <h3 mat-dialog-title>Delete reservation #{{ data.id }}</h3>
   }
 
   <form class="mat-dialog-content" #formControl="ngForm">
     <div class="form">
       
       <mat-form-field>
-        <mat-label>Broj osoba</mat-label>
+        <mat-label>Number of people</mat-label>
         <input
           matInput
           type="number"
-          placeholder="Broj osoba"
+          placeholder="Number of people"
           name="brojOsoba"
           min="1"
           max="99999"
@@ -25,18 +25,18 @@
           required
         />
         @if(brojOsoba.invalid && brojOsoba.touched){
-          <mat-error>Broj osoba mora biti pozitivan i manji od 99999</mat-error>
+          <mat-error>Number of people must be between 1 and 99999</mat-error>
         }
       </mat-form-field>
     </div>
     
   <div class="form">
       <mat-form-field>
-        <mat-label>Cena Karte</mat-label>
+        <mat-label>Ticket price</mat-label>
         <input
           matInput
           type="number"
-          placeholder="Cena Karte"
+          placeholder="Ticket price"
           name="cenaKarte"
           min="0"
           max="999999"
@@ -46,14 +46,14 @@
           required
         />
         @if(cenaKarte.invalid && cenaKarte.touched){
-          <mat-error>Cena ne moze biti negativna niti veca od 999999</mat-error>
+          <mat-error>Ticket price must be between 0 and 999999</mat-error>
         }
       </mat-form-field>
     </div>
 
     <div class="form">
       <mat-form-field>
-        <mat-label>Datum</mat-label>
+        <mat-label>Date</mat-label>
         <input matInput [matDatepicker]="datumPicker" name="datum" [disabled]="flag == 3" [(ngModel)]="datumValue" readonly required />
         <mat-datepicker-toggle matSuffix [for]="datumPicker" [disabled]="flag == 3"></mat-datepicker-toggle>
         <mat-datepicker #datumPicker></mat-datepicker>
@@ -62,10 +62,10 @@
 
     @if (showSalaSelect) {
       <mat-form-field>
-        <mat-label>Sala</mat-label>
+        <mat-label>Hall</mat-label>
         <mat-select [compareWith]="compare" name="sala" [disabled]="flag == 3" [(ngModel)]="data.sala" required>
           @for (sala of sale(); track sala.id) {
-            <mat-option [value]="sala">Sala #{{ sala.id }} ({{ sala.bioskop?.naziv }})</mat-option>
+            <mat-option [value]="sala">Hall #{{ sala.id }} ({{ sala.bioskop?.naziv }})</mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -73,7 +73,7 @@
 
     <div class="form">
       <mat-form-field>
-      <mat-label>Film</mat-label>
+      <mat-label>Movie</mat-label>
       <mat-select [compareWith]="compare" name="film" [disabled]="flag == 3" [(ngModel)]="data.film" required>
         @for (film of filmovi(); track film.id) {
           <mat-option [value]="film">{{ film.naziv }}</mat-option>
@@ -86,7 +86,7 @@
 
     <div class="form">
        <mat-checkbox name="placeno" [disabled]="flag == 3" [(ngModel)]="data.placeno">
-        Placeno
+        Paid
       </mat-checkbox>
     </div>
   </form>

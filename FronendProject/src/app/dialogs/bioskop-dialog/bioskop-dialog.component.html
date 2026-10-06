@@ -1,19 +1,19 @@
 <div class="container">
   @if (flag === 1) {
-    <h3 mat-dialog-title>Dodavanje bioskopa</h3>
+    <h3 mat-dialog-title>Add cinema</h3>
   } @else if (flag === 2) {
-    <h3 mat-dialog-title>Izmjena bioskopa: {{ data.naziv }}</h3>
+    <h3 mat-dialog-title>Edit cinema: {{ data.naziv }}</h3>
   } @else if (flag === 3) {
-    <h3 mat-dialog-title>Brisanje bioskopa: {{ data.naziv }}</h3>
+    <h3 mat-dialog-title>Delete cinema: {{ data.naziv }}</h3>
   }
 
   <form class="mat-dialog-content" #formControl="ngForm">
     <div class="form">
       <mat-form-field>
-        <mat-label>Naziv</mat-label>
+        <mat-label>Name</mat-label>
         <input
           matInput
-          placeholder="Naziv"
+          placeholder="Name"
           name="naziv"
           maxlength="100"
           [disabled]="flag == 3"
@@ -25,10 +25,10 @@
     
     <div class="form">
       <mat-form-field>
-        <mat-label>Adresa</mat-label>
+        <mat-label>Address</mat-label>
         <input
           matInput
-          placeholder="Adresa"
+          placeholder="Address"
           name="adresa"
           maxlength="100"
           [disabled]="flag == 3"

@@ -1,21 +1,21 @@
 <div class="container">
   @if (flag === 1) {
-    <h3 mat-dialog-title>Dodavanje sale</h3>
+    <h3 mat-dialog-title>Add hall</h3>
   } @else if (flag === 2) {
-    <h3 mat-dialog-title>Izmjena sale: {{ data.id }}</h3>
+    <h3 mat-dialog-title>Edit hall #{{ data.id }}</h3>
   } @else if (flag === 3) {
-    <h3 mat-dialog-title>Brisanje sale: {{ data.id }}</h3>
+    <h3 mat-dialog-title>Delete hall #{{ data.id }}</h3>
   }
 
   <form class="mat-dialog-content" #formControl="ngForm">
     <div class="form">
       
       <mat-form-field>
-        <mat-label>Kapacitet</mat-label>
+        <mat-label>Capacity</mat-label>
         <input
           matInput
           type="number"
-          placeholder="Kapacitet"
+          placeholder="Capacity"
           name="kapacitet"
           min="1"
           max="999999"
@@ -25,18 +25,18 @@
           required
         />
         @if(kapacitetRef.invalid && kapacitetRef.touched){
-           <mat-error>Kapacitet mora biti pozitivan i manji od 999999</mat-error>
+           <mat-error>Capacity must be between 1 and 999999</mat-error>
         }
       </mat-form-field>
     </div>
     
   <div class="form">
       <mat-form-field>
-        <mat-label>Broj Redova</mat-label>
+        <mat-label>Number of rows</mat-label>
         <input
           matInput
           type="number"
-          placeholder="Broj Redova"
+          placeholder="Number of rows"
           name="brojRedova"
           min="1"
           max="999999"
@@ -46,14 +46,14 @@
           required
         />
         @if(brojRedovaRef.invalid && brojRedovaRef.touched){
-           <mat-error>Broj redova mora biti pozitivan i manji od 999999</mat-error>  
+           <mat-error>Number of rows must be between 1 and 999999</mat-error>  
         }
       </mat-form-field>
     </div>
 
     <div class="form">
       <mat-form-field>
-        <mat-label>Bioskop</mat-label>
+        <mat-label>Cinema</mat-label>
         <mat-select [compareWith]="compare" name="bioskop" [disabled]="flag == 3" [(ngModel)]="data.bioskop" required>
         @for (bioskop of bioskopi; track bioskop.id) {
           <mat-option [value]="bioskop">{{ bioskop.naziv }}</mat-option>

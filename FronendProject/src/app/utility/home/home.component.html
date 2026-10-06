@@ -1,49 +1,49 @@
 <div class="page-container">
 
   <section class="hero">
-    <h1>Administracija bioskopske mreze</h1>
-    <p class="hero-subtitle">Pregled i upravljanje bioskopima, salama, filmovima i rezervacijama na jednom mjestu.</p>
+    <h1>Cinema Network Administration</h1>
+    <p class="hero-subtitle">Manage cinemas, halls, movies and reservations in one place.</p>
   </section>
 
   <section class="stats-row">
     <div class="stat-card">
       <span class="stat-value">{{ brojBioskopa() }}</span>
-      <span class="stat-label">Bioskopa</span>
+      <span class="stat-label">Cinemas</span>
     </div>
     <div class="stat-card">
       <span class="stat-value">{{ brojSala() }}</span>
-      <span class="stat-label">Sala</span>
+      <span class="stat-label">Halls</span>
     </div>
     <div class="stat-card">
       <span class="stat-value">{{ brojFilmova() }}</span>
-      <span class="stat-label">Filmova</span>
+      <span class="stat-label">Movies</span>
     </div>
     <div class="stat-card">
       <span class="stat-value">{{ brojRezervacija() }}</span>
-      <span class="stat-label">Rezervacija</span>
+      <span class="stat-label">Reservations</span>
     </div>
   </section>
 
   <section class="nav-cards">
     <a class="nav-card" routerLink="/bioskop">
       <mat-icon>theaters</mat-icon>
-      <h3>Bioskopi</h3>
-      <p>Pregled i upravljanje bioskopima u mrezi.</p>
+      <h3>Cinemas</h3>
+      <p>Browse and manage cinemas in the network.</p>
     </a>
     <a class="nav-card" routerLink="/sala">
       <mat-icon>chair</mat-icon>
-      <h3>Sale</h3>
-      <p>Sale po bioskopima i njihove rezervacije.</p>
+      <h3>Halls</h3>
+      <p>Halls by cinema and their reservations.</p>
     </a>
     <a class="nav-card" routerLink="/film">
       <mat-icon>movie</mat-icon>
-      <h3>Filmovi</h3>
-      <p>Katalog filmova dostupnih za prikazivanje.</p>
+      <h3>Movies</h3>
+      <p>Catalog of movies available for screening.</p>
     </a>
     <a class="nav-card" routerLink="/rezervacija">
       <mat-icon>confirmation_number</mat-icon>
-      <h3>Rezervacije</h3>
-      <p>Pretraga i pregled svih rezervacija u sistemu.</p>
+      <h3>Reservations</h3>
+      <p>Search and browse all reservations in the system.</p>
     </a>
   </section>
 

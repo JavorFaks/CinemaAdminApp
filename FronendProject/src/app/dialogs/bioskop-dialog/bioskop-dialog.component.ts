@@ -34,11 +34,11 @@ export class BioskopDialogComponent {
     this.service.createBioskop(this.data).subscribe({
       next: () => {
         this.dialogRef.close(1);
-        this.snackBar.open('Bioskop je uspešno dodat!', 'OK', { duration: 2500 });
+        this.snackBar.open('Cinema added successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom dodavanja bioskopa.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while adding the cinema.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -48,11 +48,11 @@ export class BioskopDialogComponent {
     this.service.updateBioskop(this.data).subscribe({
       next: () =>{
         this.dialogRef.close(1);
-        this.snackBar.open('Bioskop je uspešno izmenjen!', 'OK', { duration: 2500 });
+        this.snackBar.open('Cinema updated successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom izmene bioskopa.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while updating the cinema.', 'OK', { duration: 2500 });
       }
     });
   }
@@ -62,11 +62,11 @@ export class BioskopDialogComponent {
     this.service.deleteBioskop(this.data.id).subscribe({
       next: () =>{
         this.dialogRef.close(1);
-        this.snackBar.open('Bioskop je uspešno obrisan!', 'OK', { duration: 2500 });
+        this.snackBar.open('Cinema deleted successfully!', 'OK', { duration: 2500 });
       },
       error: (err) => {
         console.log(err);
-        this.snackBar.open('Došlo je do greške prilikom brisanja bioskopa.', 'OK', { duration: 2500 });
+        this.snackBar.open('An error occurred while deleting the cinema.', 'OK', { duration: 2500 });
       }
     });
   }
