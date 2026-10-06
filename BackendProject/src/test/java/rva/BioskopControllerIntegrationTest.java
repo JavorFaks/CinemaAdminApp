@@ -2,39 +2,52 @@ package rva;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import rva.model.Bioskop;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+//Svaka test klasa dobija novi kontekst, a time i svjeze napunjenu bazu iz data.sql
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BioskopControllerIntegrationTest {
 
 	RestTemplate template = new RestTemplate();
-	String apiUrl = "http://localhost:8080/bioskop";
+	
+	@LocalServerPort
+	private int port;
+	
+	String apiUrl;
+	
+	@BeforeEach
+	void setUp() {
+		apiUrl = "http://localhost:" + port + "/bioskop";
+	}
+	
 	long largestId = 0;	
 	
 	@Test
 	@Order(1)
 	void getAllBioskop() {
-		ResponseEntity<List<Bioskop>> response = template.exchange(apiUrl, HttpMethod.GET, null, 
-				new ParameterizedTypeReference<List<Bioskop>>() {});
+		ResponseEntity<PageResponse<Bioskop>> response = template.exchange(apiUrl, HttpMethod.GET, null, 
+				new ParameterizedTypeReference<PageResponse<Bioskop>>() {});
 		
 		assertEquals(200, response.getStatusCode().value());
-		assertNotEquals(0, response.getBody().size());
+		assertNotEquals(0, response.getBody().getContent().size());
 	}
 	
 	@Test
@@ -53,17 +66,17 @@ class BioskopControllerIntegrationTest {
 		String trazeniGrad = "Beograd"; 
 		
 		try {
-			ResponseEntity<List<Bioskop>> response = template.exchange(apiUrl + "/grad?grad=" + trazeniGrad, 
+			ResponseEntity<PageResponse<Bioskop>> response = template.exchange(apiUrl + "/grad?grad=" + trazeniGrad, 
 					HttpMethod.GET, 
 					null, 
-					new ParameterizedTypeReference<List<Bioskop>>() {});
+					new ParameterizedTypeReference<PageResponse<Bioskop>>() {});
 			
 			assertEquals(200, response.getStatusCode().value());
 			
 			assertNotNull(response.getBody());
-			assertFalse(response.getBody().isEmpty());
+			assertFalse(response.getBody().getContent().isEmpty());
 			
-			for (Bioskop b : response.getBody()) {
+			for (Bioskop b : response.getBody().getContent()) {
 			
 				String adresaBioskopa = b.getAdresa().toLowerCase();
 				assertTrue(adresaBioskopa.contains(trazeniGrad.toLowerCase()));

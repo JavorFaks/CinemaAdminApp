@@ -2,18 +2,19 @@ package rva;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,6 +23,8 @@ import rva.model.Sala;
 import rva.service.BioskopService;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+//Svaka test klasa dobija novi kontekst, a time i svjeze napunjenu bazu iz data.sql
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SalaControllerIntegrationTest {
 	
@@ -29,17 +32,27 @@ class SalaControllerIntegrationTest {
 	private BioskopService bService;
 	
 	RestTemplate template = new RestTemplate();
-	String apiUrl = "http://localhost:8080/sala";
+	
+	@LocalServerPort
+	private int port;
+	
+	String apiUrl;
+	
+	@BeforeEach
+	void setUp() {
+		apiUrl = "http://localhost:" + port + "/sala";
+	}
+	
 	long largestId = 0;
 	
 	@Test
 	@Order(1)
 	void getAllSale() {
-		ResponseEntity<List<Sala>> response = template.exchange(apiUrl, HttpMethod.GET, null, 
-				new ParameterizedTypeReference<List<Sala>>() {});
+		ResponseEntity<PageResponse<Sala>> response = template.exchange(apiUrl, HttpMethod.GET, null, 
+				new ParameterizedTypeReference<PageResponse<Sala>>() {});
 		
 		assertEquals(200, response.getStatusCode().value());
-		assertNotEquals(0, response.getBody().size());
+		assertNotEquals(0, response.getBody().getContent().size());
 	}
 	
 	@Test
@@ -60,16 +73,16 @@ class SalaControllerIntegrationTest {
 		
 		String url = apiUrl + "/bioskop?bioskopId=" + bioskopId;
 		
-		ResponseEntity<List<Sala>> response = template.exchange(url, 
+		ResponseEntity<PageResponse<Sala>> response = template.exchange(url, 
 				HttpMethod.GET, null, 
-				new ParameterizedTypeReference<List<Sala>>() {});
+				new ParameterizedTypeReference<PageResponse<Sala>>() {});
 		
 		assertEquals(200, response.getStatusCode().value());
 		assertNotNull(response.getBody());
-		assertNotEquals(0, response.getBody().size());
+		assertNotEquals(0, response.getBody().getContent().size());
 		
 		// Prolazimo kroz sve vraćene sale i proveravamo da li zaista pripadaju tom bioskopu
-		for(Sala s : response.getBody()) {
+		for(Sala s : response.getBody().getContent()) {
 			assertEquals(bioskopId, s.getBioskop().getId());
 		}
 	}
@@ -81,7 +94,7 @@ class SalaControllerIntegrationTest {
 		String url = apiUrl + "/bioskop?bioskopId=" + nepostojeciId;
 		
 		try {
-			template.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Sala>>() {});
+			template.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<PageResponse<Sala>>() {});
 			
 			fail("Ocekivano je 404 Not Found jer bioskop ne postoji.");
 			
@@ -99,15 +112,15 @@ class SalaControllerIntegrationTest {
 		
 		String url = apiUrl + "/pretraga?kapacitet=" + trazeniKapacitet;
 		
-		ResponseEntity<List<Sala>> response = template.exchange(url, 
+		ResponseEntity<PageResponse<Sala>> response = template.exchange(url, 
 				HttpMethod.GET, null, 
-				new ParameterizedTypeReference<List<Sala>>() {});
+				new ParameterizedTypeReference<PageResponse<Sala>>() {});
 		
 		assertEquals(200, response.getStatusCode().value());
 		assertNotNull(response.getBody());
 		
 		// Proveravamo da li svaka vraćena sala zaista ima taj kapacitet
-		for(Sala s : response.getBody()) {
+		for(Sala s : response.getBody().getContent()) {
 			assertTrue(trazeniKapacitet <= s.getKapacitet());
 			
 		}
@@ -124,15 +137,15 @@ class SalaControllerIntegrationTest {
 		
 		String url = apiUrl + "/pretraga?kapacitet=" + trazeniKapacitet + "&brojRedova=" + trazeniBrojRedova + "&bioskopId=" + bioskopId;
 		
-		ResponseEntity<List<Sala>> response = template.exchange(url, 
+		ResponseEntity<PageResponse<Sala>> response = template.exchange(url, 
 				HttpMethod.GET, null, 
-				new ParameterizedTypeReference<List<Sala>>() {});
+				new ParameterizedTypeReference<PageResponse<Sala>>() {});
 		
 		assertEquals(200, response.getStatusCode().value());
 		assertNotNull(response.getBody());
 		
 		// Stroga provera: da li rezultati ispunjavaju SVE uslove
-		for(Sala s : response.getBody()) {
+		for(Sala s : response.getBody().getContent()) {
 			assertTrue(trazeniKapacitet <= s.getKapacitet());
 			assertTrue(trazeniBrojRedova <= s.getBrojRedova());
 			assertEquals(bioskopId, s.getBioskop().getId());
@@ -249,9 +262,32 @@ class SalaControllerIntegrationTest {
 			template.exchange(apiUrl + "/" + nepostojeciId, HttpMethod.DELETE, null, Void.class);
 			
 			fail("Ocekivano je 404 Not Found, jer ne mozemo obrisati salu koja ne postoji.");
-			
+
 		} catch (HttpClientErrorException e) {
 			assertEquals(404, e.getStatusCode().value());
+		}
+	}
+
+	@Test
+	@Order(13)
+	void updateSala_BioskopBezId_Returns400() {
+		Sala sala = new Sala();
+		sala.setKapacitet(100);
+		sala.setBrojRedova(10);
+
+		// Bioskop bez ID-ja ranije je izazivao NullPointerException i 500
+		sala.setBioskop(new Bioskop());
+
+		HttpEntity<Sala> entity = new HttpEntity<>(sala);
+
+		try {
+			template.exchange(apiUrl + "/1", HttpMethod.PUT, entity, String.class);
+
+			fail("Ocekivano je 400 Bad Request jer bioskop nema ID.");
+
+		} catch (HttpClientErrorException e) {
+			assertEquals(400, e.getStatusCode().value());
+			assertTrue(e.getResponseBodyAsString().contains("Morate poslati ID bioskopa"));
 		}
 	}
 }

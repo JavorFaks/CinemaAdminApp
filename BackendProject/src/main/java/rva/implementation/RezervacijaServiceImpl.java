@@ -83,6 +83,16 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 
 	@Override
 	public Rezervacija update(Rezervacija body, long id) {
+		// Da li je korisnik uopste poslao film
+	    if (body.getFilm() == null || body.getFilm().getId() == null) {
+	        throw new IllegalArgumentException("Morate poslati ID filma.");
+	    }
+
+	    // Da li je korisnik uopste poslao salu
+	    if (body.getSala() == null || body.getSala().getId() == null) {
+	        throw new IllegalArgumentException("Morate poslati ID sale.");
+	    }
+
 		Long filmId = body.getFilm().getId();
 		Long salaId = body.getSala().getId();
 		

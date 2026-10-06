@@ -64,6 +64,11 @@ public class SalaServiceImpl implements SalaService {
 
 	@Override
 	public Sala update(Sala body, long id) {
+		// Da li je korisnik uopste poslao Bioskop
+	    if (body.getBioskop() == null || body.getBioskop().getId() == null) {
+	        throw new IllegalArgumentException("Morate poslati ID bioskopa.");
+	    }
+
 		if(repo.existsById(id)) {
 			body.setId(id);
 			if(!bService.existsById(body.getBioskop().getId())) {

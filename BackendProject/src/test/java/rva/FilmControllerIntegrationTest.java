@@ -2,18 +2,19 @@ package rva;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -21,26 +22,38 @@ import org.springframework.web.client.RestTemplate;
 import rva.model.Film;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+//Svaka test klasa dobija novi kontekst, a time i svjeze napunjenu bazu iz data.sql
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class FilmControllerIntegrationTest {
 	
 	RestTemplate template = new RestTemplate(); //test je da ne puca na 404
-	String apiUrl = "http://localhost:8080/film";
+	
+	@LocalServerPort
+	private int port;
+	
+	String apiUrl;
+	
+	@BeforeEach
+	void setUp() {
+		apiUrl = "http://localhost:" + port + "/film";
+	}
+	
 	
 	@Test
     @Order(1)
     void testGetAllFilmovi_Returns200OK() {
-        ResponseEntity<List<Film>> response = template.exchange(
+        ResponseEntity<PageResponse<Film>> response = template.exchange(
         		apiUrl,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Film>>() {}
+                new ParameterizedTypeReference<PageResponse<Film>>() {}
         );
 
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().size() > 0);
+        assertTrue(response.getBody().getContent().size() > 0);
     }
 	
 	@Test
@@ -75,41 +88,38 @@ class FilmControllerIntegrationTest {
     void testNaprednaPretraga_PronadjenFilm_Returns200OK_WithList() {
         String url = apiUrl + "/pretraga?maxMinuta=200";
 
-        ResponseEntity<List<Film>> response = template.exchange(
+        ResponseEntity<PageResponse<Film>> response = template.exchange(
                 url,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Film>>() {}
+                new ParameterizedTypeReference<PageResponse<Film>>() {}
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().size() > 0);
+        assertTrue(response.getBody().getContent().size() > 0);
         
-        for (Film f : response.getBody()) {
+        for (Film f : response.getBody().getContent()) {
             assertTrue(f.getTrajanje() <= 200);
         }
     }
 
     @Test
     @Order(5)
-    void testNaprednaPretraga_NemaRezultata_Returns404NotFound() {
-    	try {
-    		String url = apiUrl + "/pretraga?zanr=NepostojeciZanr123";
+    void testNaprednaPretraga_NemaRezultata_Returns200PraznaLista() {
+    	// Pretraga bez rezultata nije greska, vraca se 200 OK sa praznom listom
+    	String url = apiUrl + "/pretraga?zanr=NepostojeciZanr123";
 
-            template.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
-                    String.class
-            );
-            fail("Test je pao: Ocekivana je 404 greska, ali je zahtev prosao (status 200).");
-    	}catch (HttpClientErrorException e) {
-            // Ocekivano ponasanje, greska 404
-            
-    		assertEquals(HttpStatus.NOT_FOUND, e.getStatusCode());
-            assertTrue(e.getResponseBodyAsString().contains("Nema filmova koji ispunjavaju ove kriterijume"));
-        }
+        ResponseEntity<PageResponse<Film>> response = template.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<PageResponse<Film>>() {}
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().getContent().isEmpty());
    }
         
 
