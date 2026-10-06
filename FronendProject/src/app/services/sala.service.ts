@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { PagedResponse } from '../models/paged-response';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Sala } from '../models/sala';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Sala } from '../models/sala';
 })
 export class SalaService {
 
-  private baseUrl = 'http://localhost:8080/sala';
+  private baseUrl = `${environment.apiUrl}/sala`;
 
   constructor(private httpClient: HttpClient) {}
 

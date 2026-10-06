@@ -61,7 +61,7 @@ export class RezervacijaDialogComponent implements OnInit {
     next: (response) => this.sale.set(response.content),
     error: (err) => {
       console.log(err)
-      this.snackBar.open('Došlo je do greške prilikom učitavanja filmova.', 'OK', { duration: 2500 });
+      this.snackBar.open('Došlo je do greške prilikom učitavanja sala.', 'OK', { duration: 2500 });
     }
   });
   }

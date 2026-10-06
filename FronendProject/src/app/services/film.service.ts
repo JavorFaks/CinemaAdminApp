@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { PagedResponse } from '../models/paged-response';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Film } from '../models/film';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Film } from '../models/film';
 })
 export class FilmService {
 
-  private baseUrl = 'http://localhost:8080/film';
+  private baseUrl = `${environment.apiUrl}/film`;
 
   constructor(private httpClient: HttpClient) {}
 

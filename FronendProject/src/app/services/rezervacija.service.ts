@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { PagedResponse } from '../models/paged-response';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Rezervacija } from '../models/rezervacija';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Rezervacija } from '../models/rezervacija';
 })
 export class RezervacijaService {
 
-  private baseUrl = 'http://localhost:8080/rezervacija';
+  private baseUrl = `${environment.apiUrl}/rezervacija`;
 
   constructor(private httpClient: HttpClient) {}
 

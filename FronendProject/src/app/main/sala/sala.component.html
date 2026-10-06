@@ -3,7 +3,7 @@
   <div class="page-header-row">
     <div>
       <h1>Sale</h1>
-      <p class="page-subtitle">{{ totalElements }} {{ totalElements === 1 ? 'sala' : 'sala' }}</p>
+      <p class="page-subtitle">{{ totalElements }} sala</p>
     </div>
     <button class="btn-add" (click)="openDialog(1)">
       <mat-icon>add</mat-icon>
@@ -79,7 +79,7 @@
       <mat-label>Minimalni kapacitet</mat-label>
       <input matInput type="number" min="0" max="999999" [(ngModel)]="filterKapacitet" #filterKapacitetRef="ngModel"/>
       @if(filterKapacitetRef.invalid && filterKapacitetRef.touched){
-           <mat-error>Kapacitet mora biti pozitivan i manji od 99999</mat-error>  
+           <mat-error>Kapacitet mora biti pozitivan i manji od 999999</mat-error>  
         }
     </mat-form-field>
 

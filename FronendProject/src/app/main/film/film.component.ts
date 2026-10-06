@@ -63,7 +63,7 @@ export class FilmComponent implements OnInit {
 
     this.service.getZanrovi().subscribe({
       next: (zanrovi) => this.zanrovi.set(zanrovi),
-      error: (err) => console.log()
+      error: (err) => console.log(err)
     });
 
      this.nazivSubject.pipe(
